@@ -1,0 +1,46 @@
+
+/* jCarousel Portfolio Slider */
+
+#NePergjim{ position:relative;
+padding:10px;
+border-top:1px dotted #C00;
+}
+
+.pf-slider h2{ margin-bottom:20px; font: bold 18px/20px Arial, Helvetica, sans-serif; color:#666; text-transform:uppercase;}
+
+#NePergjim .ts-display-pf-img{
+	width:164px;
+	background:#f0efec;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	padding:6px;
+}
+#NePergjim .ts-display-pf-img:hover{background:#f45b2a;}
+#NePergjim .ts-display-pf-img .cover{
+	display:block;
+	position:relative;
+	overflow:inherit;
+	display:block;
+	position:relative;
+	display:block;
+	border:solid 3px #fff;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	width:158px;
+	height:82px;
+}
+
+#tscarousel .text_slide{ text-align:center; clear:both; padding:10px 0;font: normal 13px/18px Arial, Helvetica, sans-serif; color:#666}
+#tscarousel .text_slide h3 a{ font-size:14px; text-decoration:none;}
+
+
+#tscarousel-button{ position:absolute; top:10px; right:10px;}
+#tscarousel-button a{ width:22px; height:22px; text-indent:-9999px; float:left; display:block; cursor:pointer;}
+#tscarousel-prev{background:url(../images/pf-prev.png) no-repeat; margin-right:5px}
+#tscarousel-prev:hover{background:url(../images/pf-prev-hover.png) no-repeat;}
+#tscarousel-next{ background:url(../images/pf-next.png) no-repeat;}
+#tscarousel-next:hover{ background:url(../images/pf-next-hover.png) no-repeat;}
+
+

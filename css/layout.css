@@ -1,0 +1,253 @@
+@charset "utf-8";
+/* CSS Document */
+
+body{
+    background-color:#e3e2e0;
+/*    background:#CCC url(../images/page_bg.png) repeat-x left top;  */    }
+
+.clear{ clear:both;}
+
+
+.container_12{
+    margin:10px auto;
+    border:1px solid #CCC;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 5px 5px #ccc;
+    box-shadow: 0px 0px 5px 5px #ccc;
+    position:relative;
+    z-index:100;
+    
+    }
+
+.container_13{
+    margin:5px auto;
+    border:1px solid #CCC;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 5px 5px #ccc;
+    box-shadow: 0px 0px 5px 5px #ccc;
+    position:relative;
+    z-index:100;
+    width:550px;
+    background-color:#FFF;
+    
+    }
+
+
+.slideshow{
+    width:  964px; 
+    height: 250px;  
+    padding: 0;  
+    margin:  0;
+    overflow:hidden;
+    }
+  
+.slideshow img {  
+    padding: 0;  
+    border:  0;  
+    background-color: #eee;  
+    width:  964px; 
+    height: 250px; 
+    top:  0; 
+    left: 0 
+}
+    
+    
+    .ShiritiLogo{
+        border-bottom:1px solid #999;
+                background-color: #f8e0c8;  
+        position:relative;
+    }
+    
+    .logo{
+    padding:0;
+    float:left;
+
+    }
+
+
+#menu{
+    width:964px;
+    height:41px;
+}
+
+    .SearchForm{
+        position:absolute;
+        top:50px;
+        right:0;
+        text-align:left;
+    }
+
+    .socialButtons{
+        position:absolute;
+        top:10px;
+        right:10px;
+        text-align:left;
+    }
+
+
+.search { 
+    padding:2px;
+    border:1px solid #999;
+    font:normal 14px/20px Arial, Helvetica, sans-serif;
+    color:#333;
+    height:20px;
+    width:200px;
+    float:left;
+}
+
+
+
+.kerkimiButon {
+    position:relative; 
+    left:-2px;
+    border:1px solid #adc5cf;
+    background: #e4f1f9; /* Old browsers */
+    background: -moz-linear-gradient(top, #e4f1f9 0%, #d5e7f3 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e4f1f9), color-stop(100%,#d5e7f3)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #e4f1f9 0%,#d5e7f3 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #e4f1f9 0%,#d5e7f3 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #e4f1f9 0%,#d5e7f3 100%); /* IE10+ */
+    background: linear-gradient(top, #e4f1f9 0%,#d5e7f3 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e4f1f9', endColorstr='#d5e7f3',GradientType=0 ); /* IE6-9 */
+    color:#7da2aa;
+    cursor: pointer;
+    padding:3px 3px 4px 3px;
+    height:26px;
+    font:bold 14px/20px Arial, Helvetica, sans-serif;
+    float:left;
+    
+}
+
+
+    
+    
+        
+/* SCROLL BAR 1  */
+#scrollbar1 { margin: 0 0 5px 0; }
+#scrollbar1 .viewport { height: 200px; overflow: hidden; position: relative;}
+#scrollbar1 .overview { list-style: none; position: absolute; left: 0; top: 0;  padding:0 5px 0 0;; margin: 0; }
+#scrollbar1 .scrollbar{ background: transparent url(../images/bg-scrollbar-track-y.png) no-repeat 0 0; position: relative; background-position: 0 0; float: right; width: 15px; }
+#scrollbar1 .track { background: transparent url(../images/bg-scrollbar-trackend-y.png) no-repeat 0 100%; height: 100%; width:13px; position: relative; padding: 0 1px; }
+#scrollbar1 .thumb { background: transparent url(../images/bg-scrollbar-thumb-y.png) no-repeat 50% 100%; height: 20px; width: 25px; cursor: pointer; overflow: hidden; position: absolute; top: 0; left: -5px; }
+#scrollbar1 .thumb .end { background: transparent url(../images/bg-scrollbar-thumb-y.png) no-repeat 50% 0; overflow: hidden; height: 5px; width: 25px; }
+#scrollbar1 .disable { display: none; }
+.noSelect { user-select: none; -o-user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; }    
+
+
+
+/* SCROLL BAR 2  */
+#scrollbar2 { margin: 0 0 5px 0; }
+#scrollbar2 .viewport { height: 150px; overflow: hidden; position: relative;}
+#scrollbar2 .overview { list-style: none; position: absolute; left: 0; top: 0;  padding:0 5px 0 0;; margin: 0; }
+#scrollbar2 .scrollbar{ background: transparent url(../images/bg-scrollbar-track-y.png) no-repeat 0 0; position: relative; background-position: 0 0; float: right; width: 15px; }
+#scrollbar2 .track { background: transparent url(../images/bg-scrollbar-trackend-y.png) no-repeat 0 100%; height: 100%; width:13px; position: relative; padding: 0 1px; }
+#scrollbar2 .thumb { background: transparent url(../images/bg-scrollbar-thumb-y.png) no-repeat 50% 100%; height: 20px; width: 25px; cursor: pointer; overflow: hidden; position: absolute; top: 0; left: -5px; }
+#scrollbar2 .thumb .end { background: transparent url(../images/bg-scrollbar-thumb-y.png) no-repeat 50% 0; overflow: hidden; height: 5px; width: 25px; }
+#scrollbar2 .disable { display: none; }
+.noSelect { user-select: none; -o-user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; }    
+
+
+
+
+
+
+.Ebill_kerkese{
+    width:144px;
+    margin-bottom:20px;
+}
+
+
+.Kutia4{
+    padding:10px;
+    margin:10px 0 20px 0;
+    border:1px solid #CCC;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    
+    
+    background: #e2e2e2; /* Old browsers */
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2UyZTJlMiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjE4JSIgc3RvcC1jb2xvcj0iI2QxZDFkMSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjE5JSIgc3RvcC1jb2xvcj0iI2RiZGJkYiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZWZlZmUiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top,  #e2e2e2 0%, #d1d1d1 18%, #dbdbdb 19%, #fefefe 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e2e2e2), color-stop(18%,#d1d1d1), color-stop(19%,#dbdbdb), color-stop(100%,#fefefe)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #e2e2e2 0%,#d1d1d1 18%,#dbdbdb 19%,#fefefe 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #e2e2e2 0%,#d1d1d1 18%,#dbdbdb 19%,#fefefe 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #e2e2e2 0%,#d1d1d1 18%,#dbdbdb 19%,#fefefe 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #e2e2e2 0%,#d1d1d1 18%,#dbdbdb 19%,#fefefe 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#fefefe',GradientType=0 ); /* IE6-8 */
+
+    
+    
+    }
+    
+    
+.Kutia4 img{
+    border:1px solid #FFF;
+    margin-top:8px;
+    }    
+    
+
+.Kutia4 ul{
+    margin:0 11px;
+    list-style:none;}
+
+
+
+.Kutia4 p{
+    padding:0 5px 10px 0;
+    color:#333;
+    }
+
+
+.Kutia4 ul li{
+    color:#333;
+    padding-left:15px;
+    background:url(../images/arrow-off.png) no-repeat top left;
+    
+    }
+
+.Kutia4 ul li:hover{
+    color:#333;
+    padding-left:15px;
+    background:url(../images/arrow-on.png) no-repeat top left;
+    }
+
+
+.Kutia4 ul li a{
+    font:normal 12px/16px Arial, Helvetica, sans-serif;
+    color:#444;
+    text-decoration:none;
+    }
+    
+.Kutia4 ul li a:hover{
+    font:normal 12px/16px Arial, Helvetica, sans-serif;
+    color:#f15922;
+    text-decoration:underline;
+    }    
+
+
+.Kutia4 #LinkMore{
+    padding:5px 11px;
+    text-align:right;
+    }
+
+.Kutia4 #LinkMore a{
+    font: bold 12px/18px Arial, Helvetica, sans-serif;
+    color:#F90;
+    text-decoration:none;
+}
+
+.Kutia4 #LinkMore a:hover{
+    font: bold 12px/18px Arial, Helvetica, sans-serif;
+    color:#369;
+    text-decoration:underline;
+}
+
+
+    
+    

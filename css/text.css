@@ -1,0 +1,407 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*
+  960 Grid System ~ Text CSS.
+  Learn more ~ http://960.gs/
+
+  Licensed under GPL and MIT.
+*/
+
+/* `Basic HTML
+----------------------------------------------------------------------------------------------------*/
+
+/* @import url(http://fonts.googleapis.com/css?family=Roboto+Condensed); */
+/* @import url(http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700); */
+
+body {
+  font: 13px/19px  Tahoma, Geneva, sans-serif; background-color:#63C;
+}
+
+a, a:link { color: #333; }
+a:visited { color: #333; }
+a:hover {color: #F15922; text-decoration:underline; }
+
+hr {
+  border: 0 #ccc solid;
+  border-top-width: 1px;
+  clear: both;
+  height: 0;
+}
+
+/* `Headings 'Roboto Condensed
+----------------------------------------------------------------------------------------------------*/
+
+h1 { font:normal 32px/38px 'Roboto Condensed', Tahoma, Geneva, sans-serif; margin:10px 0; color:#666; }
+h2 { font-size: 24px; font-family: 'Roboto Condensed', Tahoma, Geneva, sans-serif; }
+h3 { font-size: 20px; font-family: 'Roboto Condensed', Tahoma, Geneva, sans-serif; }
+h4 { font-size: 18px; font-family: arial, helvetica, sans-serif; }
+h5 { font-size: 16px; font-family: arial, helvetica, sans-serif; }
+h6 { font: italic bold 14px/22px arial, helvetica, sans-serif; color:#666; }
+
+
+
+
+
+
+	
+ul.FlashNews li{
+	margin: 0 0 10px 0;
+	font: normal 13px/19px arial, helvetica, sans-serif; color:#333;
+	}	
+	
+ul.FlashNews li a{
+	margin: 0 0 10px 0;
+	font: normal 13px/19px arial, helvetica, sans-serif; color:#333;
+	color:#333;
+	text-decoration:none;
+	}		
+	
+ul.FlashNews li a:hover{
+	margin: 0 0 10px 0;
+	font: normal 13px/19px arial, helvetica, sans-serif; color:#333;
+	color:#333;	
+	text-decoration:underline;
+	color:#f15922;
+}
+
+
+
+
+
+
+
+ul.VideoNews li {
+	padding:5px 0;
+	border-bottom: 1px solid #E9E9E9;
+
+	}
+
+
+	
+ul.VideoNews li img{
+	margin: 0 10px 0 0;
+	float:left;
+	}
+	
+ul.VideoNews li p{
+	width:125px;
+	float:left;
+	
+	}	
+	
+ul.VideoNews li{
+	margin: 0 0 10px 0;
+	font: normal 13px/19px arial, helvetica, sans-serif; color:#333;
+	}	
+	
+ul.VideoNews li a{
+	margin: 0 0 10px 0;
+	font: normal 13px/19px arial, helvetica, sans-serif; color:#333;
+	color:#333;
+	text-decoration:none;
+	}		
+	
+ul.VideoNews li a:hover{
+	margin: 0 0 10px 0;
+	font: normal 13px/19px arial, helvetica, sans-serif; color:#333;
+	color:#333;	
+	text-decoration:underline;
+	color:#f15922;
+
+}
+
+
+
+ul.faq{
+	background:url(../images/faq_bottom.png) no-repeat bottom center;}
+
+
+ul.faq li {
+	padding: 0 5px 5px 5px;
+	font: normal 13px/19px arial, helvetica, sans-serif; color:#333;
+	}	
+	
+ul.faq li a{
+	font: normal 13px/19px arial, helvetica, sans-serif; color:#333;
+	color:#333;
+	text-decoration:none;
+	}		
+	
+ul.faq li a:hover{
+	margin: 0 0 10px 0;
+	font: normal 13px/19px arial, helvetica, sans-serif; color:#333;
+	color:#333;	
+	text-decoration:underline;
+	color:#f15922;
+
+}
+
+
+
+
+.meshume{
+	background:#FFF url(../images/more_bg.png) repeat-x top left;
+	text-align:right;
+	height:17px;
+	}
+
+
+
+
+
+
+
+
+
+
+.fotoja a{
+	border:2px solid #999;
+	display:block;
+	}
+
+.fotoja a:hover{
+	border:2px solid #333;
+	}
+
+
+	
+
+	
+
+
+
+/* FOOTER */
+
+.footer {
+    background: #CCC url(../images/footer_bg.png) repeat-x left top;
+    color: #fff;
+    padding: 15px;
+	font: normal 12px/20px Arial, Helvetica, sans-serif;
+    }
+.footer a {
+    color: #fff;
+    }
+
+.footer .contact {
+	font: normal 12px/20px Arial, Helvetica, sans-serif;
+	color:#333;
+    }
+.footer .contact a{
+	font: bold 12px/20px Arial, Helvetica, sans-serif;
+	color:#333;
+	text-decoration:none;
+    }
+
+.footer .contact a:hover{
+	font: bold 12px/20px Arial, Helvetica, sans-serif;
+	color:#333;
+	text-decoration:underline;
+    }
+
+.footer .contact {
+    width: 550px;
+    float: left;
+    }
+.footer .navigation {
+    width: 400px;
+    float: left;
+    }
+.footer .navigation ul {
+    padding: 0;
+    margin: 0;
+    float: left;
+    width: 33%;
+    }
+
+.footer .navigation ul li a {
+	font: normal 12px/20px Arial, Helvetica, sans-serif;
+	color:#333;
+	text-decoration:none;
+}
+
+.footer .navigation ul li a:hover {
+	font: normal 12px/20px Arial, Helvetica, sans-serif;
+	color:#333;
+	text-decoration:underline;
+}
+
+
+
+.shared {
+	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+	background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	background-color:#ededed;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#777777;
+	font-family:arial;
+	font-size:15px;
+	font-weight:normal;
+	padding:6px 30px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #ffffff;
+}
+.shared:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+}
+.shared:active {
+	position:relative;
+	top:1px;
+}
+
+
+.KutiTitull{ 
+	font-size: 20px; font-family: 'Roboto Condensed', Tahoma, Geneva, sans-serif; color:#666;
+	text-shadow: 1px 2px 1px #FFFFFF;
+    filter: dropshadow(color=#FFFFFF, offx=1, offy=2);  
+	}
+
+
+
+
+.Titulli{
+
+	font-size: 26px; 
+	font-family: 'Roboto Condensed', Tahoma, Geneva, sans-serif; color:#666;
+	margin:20px 0;
+}
+.Teksti{
+	font: normal 13px/20px arial, helvetica, sans-serif; 
+	color:#444
+	}		
+	
+	
+	
+	
+/* Pyetje pergjigje */
+
+.Pyetjafaq{
+	font: normal 13px/20px arial, helvetica, sans-serif; 
+	color:#444;
+	padding:5px 0;
+	}
+
+.Pyetjafaq a{
+	font: normal 13px/20px arial, helvetica, sans-serif; 
+	color:#444;
+	text-decoration:none;
+	}	
+
+.Pyetjafaq a:hover{
+	font: normal 13px/20px arial, helvetica, sans-serif; 
+	color:#F60;
+	text-decoration:underline;
+	}
+
+.PyetjafaqAktive, .PyetjafaqAktive a, .PyetjafaqAktive a:hover	{
+	font: bold 13px/20px arial, helvetica, sans-serif; 
+	color:#F60;
+	text-decoration:none;
+	}	
+
+
+.ans_content{
+	border:1px solid #F90;
+	padding:20px;
+	}
+	
+.ans_content p{
+	font: normal 13px/20px arial, helvetica, sans-serif; 
+	color:#333;
+	}	
+	
+	
+	
+	
+.Permbajtja{
+	padding:20px;
+	}	
+	
+
+.Permbajtja ul{
+	list-style:none;
+	padding-left:20px;
+	margin-bottom:20px;
+	}		
+	
+.Permbajtja ol{
+	padding-left:40px;
+	margin-bottom:20px;
+	}			
+	/arrow-on.png
+	
+
+
+.Permbajtja ul li {
+	padding: 0 5px 5px 10px;
+	font: normal 13px/19px arial, helvetica, sans-serif; color:#333;
+	background: url(../images/sh1.png) no-repeat left top;
+	}	
+
+.Permbajtja ol li{
+	padding: 0 0 0 5px;	
+	}
+	
+.Permbajtja ul li a{
+	font: normal 13px/19px arial, helvetica, sans-serif; color:#333;
+	color:#333;
+	text-decoration:none;
+	
+	}		
+	
+.Permbajtja ul li a:hover{
+	margin: 0 0 10px 0;
+	font: normal 13px/19px arial, helvetica, sans-serif; color:#333;
+	color:#333;	
+	text-decoration:underline;
+	color:#f15922;
+
+}
+
+.fotoArtikulli{
+	float: left;
+	font-weight: normal;
+	margin: 0 10px 10px 0;
+	padding: 4px;
+	border: 1px solid #CCC;
+	background-color: #F2F2F2;
+	}
+
+.txtDiticura{
+	font:11px/14px Arial, Helvetica, sans-serif;
+	color: #333;
+	white-space:normal;
+	margin: 0;
+}
+
+
+/* rub */
+
+
+
+.ModulRub{
+	padding:15px 0;
+}
+
+.TitulliRub{
+	font-size: 18px; 
+	font-family: 'Roboto Condensed', Tahoma, Geneva, sans-serif; color:#666;
+	margin:0 0 10px 0;
+}
+
+.TxtRub{	font: normal 13px/19px arial, helvetica, sans-serif; color:#333;}
+
+
+
+a.linkartikull{color:#F60;text-decoration:none;}
