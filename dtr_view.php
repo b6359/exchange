@@ -6,386 +6,454 @@ date_default_timezone_set('Europe/Tirane');
 require_once('ConMySQL.php');
 
 if (isset($_SESSION['uid'])) {
-    $user_info = $_SESSION['Username'] ?? addslashes($_SESSION['Username']);
+  $user_info = $_SESSION['Username'] ?? addslashes($_SESSION['Username']);
 
-    $v_begindate = "";
-    if ((isset($_POST['p_date1'])) && ($_POST['p_date1'] != "")) {
+  $v_begindate = "";
+  if ((isset($_POST['p_date1'])) && ($_POST['p_date1'] != "")) {
 
-        $v_perioddate  = " and ek.date_trans = '". substr($_POST['p_date1'], 6, 4)."-".substr($_POST['p_date1'], 3, 2)."-".substr($_POST['p_date1'], 0, 2) ."'";
+    $v_perioddate  = " and ek.date_trans = '" . substr($_POST['p_date1'], 6, 4) . "-" . substr($_POST['p_date1'], 3, 2) . "-" . substr($_POST['p_date1'], 0, 2) . "'";
 
-        $v_tempdate   = substr($_POST['p_date1'], 6, 4)."-".substr($_POST['p_date1'], 3, 2)."-".substr($_POST['p_date1'], 0, 2);
-        $v_view_dt    = substr($v_tempdate, 8, 2);
-        $v_beginmonth = substr($v_tempdate, 5, 2);
-        $v_monthdisp = "";
-        if ($v_beginmonth == "01") {  $v_monthdisp = "Jan";  }
-        if ($v_beginmonth == "02") {  $v_monthdisp = "Shk";  }
-        if ($v_beginmonth == "03") {  $v_monthdisp = "Mar";  }
-        if ($v_beginmonth == "04") {  $v_monthdisp = "Pri";  }
-        if ($v_beginmonth == "05") {  $v_monthdisp = "Maj";  }
-        if ($v_beginmonth == "06") {  $v_monthdisp = "Qer";  }
-        if ($v_beginmonth == "07") {  $v_monthdisp = "Kor";  }
-        if ($v_beginmonth == "08") {  $v_monthdisp = "Gus";  }
-        if ($v_beginmonth == "09") {  $v_monthdisp = "Sht";  }
-        if ($v_beginmonth == "10") {  $v_monthdisp = "Tet";  }
-        if ($v_beginmonth == "11") {  $v_monthdisp = "Nen";  }
-        if ($v_beginmonth == "12") {  $v_monthdisp = "Dhj";  }
-
-        $v_view_dt    .= " ". $v_monthdisp ." ". substr($v_tempdate, 0, 4);
-
+    $v_tempdate   = substr($_POST['p_date1'], 6, 4) . "-" . substr($_POST['p_date1'], 3, 2) . "-" . substr($_POST['p_date1'], 0, 2);
+    $v_view_dt    = substr($v_tempdate, 8, 2);
+    $v_beginmonth = substr($v_tempdate, 5, 2);
+    $v_monthdisp = "";
+    if ($v_beginmonth == "01") {
+      $v_monthdisp = "Jan";
+    }
+    if ($v_beginmonth == "02") {
+      $v_monthdisp = "Shk";
+    }
+    if ($v_beginmonth == "03") {
+      $v_monthdisp = "Mar";
+    }
+    if ($v_beginmonth == "04") {
+      $v_monthdisp = "Pri";
+    }
+    if ($v_beginmonth == "05") {
+      $v_monthdisp = "Maj";
+    }
+    if ($v_beginmonth == "06") {
+      $v_monthdisp = "Qer";
+    }
+    if ($v_beginmonth == "07") {
+      $v_monthdisp = "Kor";
+    }
+    if ($v_beginmonth == "08") {
+      $v_monthdisp = "Gus";
+    }
+    if ($v_beginmonth == "09") {
+      $v_monthdisp = "Sht";
+    }
+    if ($v_beginmonth == "10") {
+      $v_monthdisp = "Tet";
+    }
+    if ($v_beginmonth == "11") {
+      $v_monthdisp = "Nen";
+    }
+    if ($v_beginmonth == "12") {
+      $v_monthdisp = "Dhj";
     }
 
-    $v_enddate = "";
-    if ((isset($_POST['p_date2'])) && ($_POST['p_date2'] != "")) {
+    $v_view_dt    .= " " . $v_monthdisp . " " . substr($v_tempdate, 0, 4);
+  }
 
-        $v_perioddate  = " and ek.date_trans >= '". substr($_POST['p_date1'], 6, 4)."-".substr($_POST['p_date1'], 3, 2)."-".substr($_POST['p_date1'], 0, 2) ."'
-                           and ek.date_trans <= '". substr($_POST['p_date2'], 6, 4)."-".substr($_POST['p_date2'], 3, 2)."-".substr($_POST['p_date2'], 0, 2) ."' ";
+  $v_enddate = "";
+  if ((isset($_POST['p_date2'])) && ($_POST['p_date2'] != "")) {
 
-        $v_tempdate   = substr($_POST['p_date2'], 6, 4)."-".substr($_POST['p_date2'], 3, 2)."-".substr($_POST['p_date2'], 0, 2);
-        $v_view_dt   .= " - ". substr($v_tempdate, 8, 2);
-        $v_beginmonth = substr($v_tempdate, 5, 2);
-        $v_monthdisp = "";
-        if ($v_beginmonth == "01") {  $v_monthdisp = "Jan";  }
-        if ($v_beginmonth == "02") {  $v_monthdisp = "Shk";  }
-        if ($v_beginmonth == "03") {  $v_monthdisp = "Mar";  }
-        if ($v_beginmonth == "04") {  $v_monthdisp = "Pri";  }
-        if ($v_beginmonth == "05") {  $v_monthdisp = "Maj";  }
-        if ($v_beginmonth == "06") {  $v_monthdisp = "Qer";  }
-        if ($v_beginmonth == "07") {  $v_monthdisp = "Kor";  }
-        if ($v_beginmonth == "08") {  $v_monthdisp = "Gus";  }
-        if ($v_beginmonth == "09") {  $v_monthdisp = "Sht";  }
-        if ($v_beginmonth == "10") {  $v_monthdisp = "Tet";  }
-        if ($v_beginmonth == "11") {  $v_monthdisp = "Nen";  }
-        if ($v_beginmonth == "12") {  $v_monthdisp = "Dhj";  }
+    $v_perioddate  = " and ek.date_trans >= '" . substr($_POST['p_date1'], 6, 4) . "-" . substr($_POST['p_date1'], 3, 2) . "-" . substr($_POST['p_date1'], 0, 2) . "'
+                           and ek.date_trans <= '" . substr($_POST['p_date2'], 6, 4) . "-" . substr($_POST['p_date2'], 3, 2) . "-" . substr($_POST['p_date2'], 0, 2) . "' ";
 
-        $v_view_dt    .= " ". $v_monthdisp ." ". substr($v_tempdate, 0, 4);
-
+    $v_tempdate   = substr($_POST['p_date2'], 6, 4) . "-" . substr($_POST['p_date2'], 3, 2) . "-" . substr($_POST['p_date2'], 0, 2);
+    $v_view_dt   .= " - " . substr($v_tempdate, 8, 2);
+    $v_beginmonth = substr($v_tempdate, 5, 2);
+    $v_monthdisp = "";
+    if ($v_beginmonth == "01") {
+      $v_monthdisp = "Jan";
+    }
+    if ($v_beginmonth == "02") {
+      $v_monthdisp = "Shk";
+    }
+    if ($v_beginmonth == "03") {
+      $v_monthdisp = "Mar";
+    }
+    if ($v_beginmonth == "04") {
+      $v_monthdisp = "Pri";
+    }
+    if ($v_beginmonth == "05") {
+      $v_monthdisp = "Maj";
+    }
+    if ($v_beginmonth == "06") {
+      $v_monthdisp = "Qer";
+    }
+    if ($v_beginmonth == "07") {
+      $v_monthdisp = "Kor";
+    }
+    if ($v_beginmonth == "08") {
+      $v_monthdisp = "Gus";
+    }
+    if ($v_beginmonth == "09") {
+      $v_monthdisp = "Sht";
+    }
+    if ($v_beginmonth == "10") {
+      $v_monthdisp = "Tet";
+    }
+    if ($v_beginmonth == "11") {
+      $v_monthdisp = "Nen";
+    }
+    if ($v_beginmonth == "12") {
+      $v_monthdisp = "Dhj";
     }
 
-    $v_branch_id = 0;
-    if ((isset($_POST['id_llogfilial'])) && ($_POST['id_llogfilial'] != "")) {
-        $v_branch_id = $_POST['id_llogfilial'];
-    }
+    $v_view_dt    .= " " . $v_monthdisp . " " . substr($v_tempdate, 0, 4);
+  }
+
+  $v_branch_id = 0;
+  if ((isset($_POST['id_llogfilial'])) && ($_POST['id_llogfilial'] != "")) {
+    $v_branch_id = $_POST['id_llogfilial'];
+  }
 
 
-      if ((isset($_POST["view"])) && ($_POST["view"] == "excel")) {
+  if ((isset($_POST["view"])) && ($_POST["view"] == "excel")) {
 
-          require_once 'Spreadsheet/Excel/Writer.php';
+    require_once 'Spreadsheet/Excel/Writer.php';
 
-          $v_file = "rep/VeprimetDitore_". strftime('%Y%m%d%H%M%S') .".xls";
-          $workbook = new Spreadsheet_Excel_Writer($v_file);
+    $v_file = "rep/VeprimetDitore_" . strftime('%Y%m%d%H%M%S') . ".xls";
+    $workbook = new Spreadsheet_Excel_Writer($v_file);
 
-          $format1    =& $workbook->addFormat(array('Size'       => 10,
-                                                    'Align'      => 'center',
-                                                    'VAlign'     => 'vcenter',
-                                                    'Color'      => 'black',
-                                                    'FontFamily' => 'Calibri',
-                                                    'Bold'       => 1,
-                                                    'Pattern'    => 1,
-                                                    'border'     => 1,
-                                                    'FgColor'    => 'aqua'));
-          $format1->setTextWrap();
+    $format1    = &$workbook->addFormat(array(
+      'Size'       => 10,
+      'Align'      => 'center',
+      'VAlign'     => 'vcenter',
+      'Color'      => 'black',
+      'FontFamily' => 'Calibri',
+      'Bold'       => 1,
+      'Pattern'    => 1,
+      'border'     => 1,
+      'FgColor'    => 'aqua'
+    ));
+    $format1->setTextWrap();
 
-          $format2    =& $workbook->addFormat(array('Size'       => 10,
-                                                    'Align'      => 'left',
-                                                    'VAlign'     => 'vcenter',
-                                                    'Color'      => 'aqua',
-                                                    'FontFamily' => 'Calibri',
-                                                    'Bold'       => 1,
-                                                    'Pattern'    => 1,
-                                                    'border'     => 1,
-                                                    'FgColor'    => 'gray'));
-          $format2->setTextWrap();
+    $format2    = &$workbook->addFormat(array(
+      'Size'       => 10,
+      'Align'      => 'left',
+      'VAlign'     => 'vcenter',
+      'Color'      => 'aqua',
+      'FontFamily' => 'Calibri',
+      'Bold'       => 1,
+      'Pattern'    => 1,
+      'border'     => 1,
+      'FgColor'    => 'gray'
+    ));
+    $format2->setTextWrap();
 
-          $format3    =& $workbook->addFormat(array('Size'       => 10,
-                                                    'Align'      => 'right',
-                                                    'VAlign'     => 'vcenter',
-                                                    'Color'      => 'aqua',
-                                                    'FontFamily' => 'Calibri',
-                                                    'Bold'       => 1,
-                                                    'Pattern'    => 1,
-                                                    'border'     => 1,
-                                                    'FgColor'    => 'gray'));
-          $format3->setTextWrap();
+    $format3    = &$workbook->addFormat(array(
+      'Size'       => 10,
+      'Align'      => 'right',
+      'VAlign'     => 'vcenter',
+      'Color'      => 'aqua',
+      'FontFamily' => 'Calibri',
+      'Bold'       => 1,
+      'Pattern'    => 1,
+      'border'     => 1,
+      'FgColor'    => 'gray'
+    ));
+    $format3->setTextWrap();
 
-          $format4    =& $workbook->addFormat(array('Size'       => 10,
-                                                    'Align'      => 'left',
-                                                    'VAlign'     => 'vcenter',
-                                                    'Color'      => 'black',
-                                                    'FontFamily' => 'Calibri',
-                                                    'Bold'       => 1,
-                                                    'Pattern'    => 1,
-                                                    'border'     => 1,
-                                                    'FgColor'    => 'white'));
-          $format4->setTextWrap();
+    $format4    = &$workbook->addFormat(array(
+      'Size'       => 10,
+      'Align'      => 'left',
+      'VAlign'     => 'vcenter',
+      'Color'      => 'black',
+      'FontFamily' => 'Calibri',
+      'Bold'       => 1,
+      'Pattern'    => 1,
+      'border'     => 1,
+      'FgColor'    => 'white'
+    ));
+    $format4->setTextWrap();
 
-          $format5    =& $workbook->addFormat(array('Size'       => 10,
-                                                    'Align'      => 'right',
-                                                    'VAlign'     => 'vcenter',
-                                                    'Color'      => 'black',
-                                                    'FontFamily' => 'Calibri',
-                                                    'Pattern'    => 1,
-                                                    'border'     => 1,
-                                                    'FgColor'    => 'white'));
-          $format5->setTextWrap();
-
-
-          $format6    =& $workbook->addFormat(array('Size'       => 10,
-                                                    'Align'      => 'left',
-                                                    'VAlign'     => 'vcenter',
-                                                    'Color'      => 'black',
-                                                    'FontFamily' => 'Calibri',
-                                                    'Bold'       => 1,
-                                                    'Pattern'    => 1,
-                                                    'border'     => 1,
-                                                    'FgColor'    => 'yellow'));
-          $format6->setTextWrap();
-
-          $format7    =& $workbook->addFormat(array('Size'       => 10,
-                                                    'Align'      => 'right',
-                                                    'VAlign'     => 'vcenter',
-                                                    'Color'      => 'black',
-                                                    'FontFamily' => 'Calibri',
-                                                    'Bold'       => 1,
-                                                    'Pattern'    => 1,
-                                                    'border'     => 1,
-                                                    'FgColor'    => 'yellow'));
-          $format7->setTextWrap();
-
-          $format8    =& $workbook->addFormat(array('Size'       => 11,
-                                                    'Align'      => 'left',
-                                                    'VAlign'     => 'vcenter',
-                                                    'Color'      => 'black',
-                                                    'FontFamily' => 'Calibri',
-                                                    'Bold'       => 1,
-                                                    'Pattern'    => 1,
-                                                    'border'     => 0,
-                                                    'FgColor'    => 'white'));
-          $format8->setTextWrap();
-
-          $format9    =& $workbook->addFormat(array('Size'       => 10,
-                                                    'Align'      => 'right',
-                                                    'VAlign'     => 'vcenter',
-                                                    'Color'      => 'white',
-                                                    'FontFamily' => 'Calibri',
-                                                    'Pattern'    => 1,
-                                                    'border'     => 1,
-                                                    'FgColor'    => 'red'));
-          $format9->setTextWrap();
-
-          $format10   =& $workbook->addFormat(array('Size'       => 10,
-                                                    'Align'      => 'right',
-                                                    'VAlign'     => 'vcenter',
-                                                    'Color'      => 'white',
-                                                    'FontFamily' => 'Calibri',
-                                                    'Bold'       => 1,
-                                                    'Pattern'    => 1,
-                                                    'border'     => 1,
-                                                    'FgColor'    => 'red'));
-          $format10->setTextWrap();
-
-        //----------------------------------------------------------------------------------------------------
-          set_time_limit(0);
-
-          $worksheet1 =& $workbook->addWorksheet('Veprimet');
-
-          $worksheet1->write(0,  0,  "", $format8);
-          $worksheet1->write(0,  1,  "", $format8);
-          $worksheet1->write(0,  2,  "", $format8);
-          $worksheet1->write(0,  3,  "", $format8);
-          $worksheet1->write(0,  4,  "", $format8);
-          $worksheet1->write(0,  5,  "", $format8);
-          $worksheet1->write(0,  6,  "", $format8);
-          $worksheet1->write(0,  7,  "", $format8);
-          $worksheet1->write(0,  8,  "", $format8);
-          $worksheet1->write(0,  9,  "", $format8);
-          $worksheet1->write(0, 10,  "", $format8);
-
-          $worksheet1->write(1,  0, "", $format8);
-          $worksheet1->write(1,  1, "Raport per transaksionet ditore/periodike (". $v_view_dt .")", $format8);
-          $worksheet1->write(1,  2, "", $format8);
-          $worksheet1->write(1,  3, "", $format8);
-          $worksheet1->write(1,  4, "", $format8);
-          $worksheet1->write(1,  5, "", $format8);
-          $worksheet1->write(1,  6, "", $format8);
-          $worksheet1->write(1,  7, "", $format8);
-          $worksheet1->write(1,  8, "", $format8);
-          $worksheet1->write(1,  9, "", $format8);
-          $worksheet1->write(1, 10, "", $format8);
-          $worksheet1->setMerge(1, 1, 1, 9);
-
-          $worksheet1->write(2,  0,  "", $format8);
-          $worksheet1->write(2,  1,  "", $format8);
-          $worksheet1->write(2,  2,  "", $format8);
-          $worksheet1->write(2,  3,  "", $format8);
-          $worksheet1->write(2,  4,  "", $format8);
-          $worksheet1->write(2,  5,  "", $format8);
-          $worksheet1->write(2,  6,  "", $format8);
-          $worksheet1->write(2,  7,  "", $format8);
-          $worksheet1->write(2,  8,  "", $format8);
-          $worksheet1->write(2,  9,  "", $format8);
-          $worksheet1->write(2, 10,  "", $format8);
-
-          $worksheet1->setRow(3, 30);
-          $worksheet1->write(3,  0,  "", $format8);
-          $worksheet1->write(3,  1, "Nr. Fature", $format1);
-          $worksheet1->write(3,  2, "Date", $format1);
-          $worksheet1->write(3,  3, "Emri / Mbiemri", $format1);
-          $worksheet1->write(3,  4, "Blere", $format1);
-          $worksheet1->write(3,  5, "Shuma e blere", $format1);
-          $worksheet1->write(3,  6, "Shitur", $format1);
-          $worksheet1->write(3,  7, "Shuma e shitur", $format1);
-          $worksheet1->write(3,  8, "Kursi", $format1);
-          $worksheet1->write(3,  9, "Shuma e paguar", $format1);
-          $worksheet1->write(3, 10, "", $format8);
-
-          $worksheet1->setColumn( 0,  0,  2);
-          $worksheet1->setColumn( 1,  1, 15);
-          $worksheet1->setColumn( 2,  2, 18);
-          $worksheet1->setColumn( 3,  3, 25);
-          $worksheet1->setColumn( 4,  4, 10);
-          $worksheet1->setColumn( 5,  5, 15);
-          $worksheet1->setColumn( 6,  6, 10);
-          $worksheet1->setColumn( 7,  7, 15);
-          $worksheet1->setColumn( 8,  8, 10);
-          $worksheet1->setColumn( 9,  9, 20);
-          $worksheet1->setColumn(10, 10,  2);
-
-          $v_rowno = 3;
-      }
-
-?>
+    $format5    = &$workbook->addFormat(array(
+      'Size'       => 10,
+      'Align'      => 'right',
+      'VAlign'     => 'vcenter',
+      'Color'      => 'black',
+      'FontFamily' => 'Calibri',
+      'Pattern'    => 1,
+      'border'     => 1,
+      'FgColor'    => 'white'
+    ));
+    $format5->setTextWrap();
 
 
-<!-- --------------------------------------- -->
-<!--          Aplikacioni xChange            -->
-<!--                                         -->
-<!--  Kontakt:                               -->
-<!--                                         -->
-<!--           GlobalTech.al                 -->
-<!--                                         -->
-<!--        info@globaltech.al               -->
-<!-- --------------------------------------- -->
+    $format6    = &$workbook->addFormat(array(
+      'Size'       => 10,
+      'Align'      => 'left',
+      'VAlign'     => 'vcenter',
+      'Color'      => 'black',
+      'FontFamily' => 'Calibri',
+      'Bold'       => 1,
+      'Pattern'    => 1,
+      'border'     => 1,
+      'FgColor'    => 'yellow'
+    ));
+    $format6->setTextWrap();
 
+    $format7    = &$workbook->addFormat(array(
+      'Size'       => 10,
+      'Align'      => 'right',
+      'VAlign'     => 'vcenter',
+      'Color'      => 'black',
+      'FontFamily' => 'Calibri',
+      'Bold'       => 1,
+      'Pattern'    => 1,
+      'border'     => 1,
+      'FgColor'    => 'yellow'
+    ));
+    $format7->setTextWrap();
 
-<html>
+    $format8    = &$workbook->addFormat(array(
+      'Size'       => 11,
+      'Align'      => 'left',
+      'VAlign'     => 'vcenter',
+      'Color'      => 'black',
+      'FontFamily' => 'Calibri',
+      'Bold'       => 1,
+      'Pattern'    => 1,
+      'border'     => 0,
+      'FgColor'    => 'white'
+    ));
+    $format8->setTextWrap();
 
-<head>
+    $format9    = &$workbook->addFormat(array(
+      'Size'       => 10,
+      'Align'      => 'right',
+      'VAlign'     => 'vcenter',
+      'Color'      => 'white',
+      'FontFamily' => 'Calibri',
+      'Pattern'    => 1,
+      'border'     => 1,
+      'FgColor'    => 'red'
+    ));
+    $format9->setTextWrap();
 
-<title><?php echo $_SESSION['CNAME']; ?> - Web Exchange System - Raport per transaksionet ditore/periodike</title>
+    $format10   = &$workbook->addFormat(array(
+      'Size'       => 10,
+      'Align'      => 'right',
+      'VAlign'     => 'vcenter',
+      'Color'      => 'white',
+      'FontFamily' => 'Calibri',
+      'Bold'       => 1,
+      'Pattern'    => 1,
+      'border'     => 1,
+      'FgColor'    => 'red'
+    ));
+    $format10->setTextWrap();
 
-<link href="rep.css" rel="stylesheet" type="text/css">
-
-</head>
-
-<body leftmargin=0 topmargin=0 marginheight="0" marginwidth="0" bgcolor=#ffffff vlink="#0000ff" link="#0000ff">
-
-<TABLE border=0 cellPadding=0 cellSpacing=0 width="100%">
-  <TBODY>
-  <TR>
-    <TD bgColor=#ffffff rowSpan=2 vAlign=center width=188>
-      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<IMG src="images/logo.png" width="auto" height="36"><br>
-      </p>
-    </TD>
-    <TD bgColor=#ffffff height=40 vAlign=top><IMG alt="" height=1 src="images/stretch.gif" width=5></TD>
-    <TD align=center bgColor=#ffffff height=40 vAlign=middle><span class="titull"><b> <?php echo $_SESSION['CNAME']; ?> - Web Exchange System</b></span></TD>
-    <TD align=right bgColor=#ffffff vAlign=bottom>
-      <span class="ReportDateUserN">
-      Printuar dt. </span><span class="ReportDateUserB"><?php echo strftime('%Y-%m-%d'); ?></span>
-      <span class="ReportDateUserN">P&euml;rdoruesi: </span><span class="ReportDateUserB"><?php echo $user_info; ?>
-      </span>
-    </TD>
-  </TR>
-  </TBODY>
-</TABLE>
-<TABLE bgColor=#ff0000 border=0 cellPadding=0 cellSpacing=0 width="100%">
-  <TBODY>
-  <TR>
-    <TD bgColor=#ff0000 class="OraColumnHeader">&nbsp; </TD>
-  </TR>
-  </TBODY>
-</TABLE>
-<TABLE border=0 cellPadding=0 cellSpacing=0 width="100%">
-  <TBODY>
-  <TR>
-    <TD bgColor=#ff0000 vAlign=top class="OraColumnHeader"><IMG alt="" border=0 height=17 src="images/topcurl.gif" width=30></TD>
-    <TD vAlign=top width="100%">
-      <TABLE border=0 cellPadding=0 cellSpacing=0 width="100%">
-        <TBODY>
-        <TR>
-          <TD bgColor=#000000 height=1><IMG alt="" border=0 height=1 src="images/stretch.gif" width=1></TD>
-        </TR>
-        <TR>
-          <TD bgColor=#9a9c9a height=1><IMG alt="" border=0 height=1 src="images/stretch.gif" width=1></TD>
-        </TR>
-        <TR>
-          <TD bgColor=#b3b4b3 height=1><IMG alt="" border=0 height=1 src="images/stretch.gif" width=1></TD>
-        </TR>
-        </TBODY>
-      </TABLE>
-    </TD>
-  </TR>
-  </TBODY>
-</TABLE>
-<TABLE width="100%" border="0" cellspacing="0" cellpadding="0">
-  <TR>
-    <TD width="100%">
-      <DIV align="center">
-<table class="OraTable">
-<caption><span class="ReportTitle"> Raport per transaksionet ditore/periodike </span></caption>
-<?php
-       //mysql_select_db($database_MySQL, $MySQL);
-       $query_filiali_info = "select * from filiali where id = ". $v_branch_id;
-       $filiali_info = mysqli_query($MySQL,$query_filiali_info) or die(mysql_error());
-       $row_filiali_info = $filiali_info->fetch_assoc();
-
-       while ($row_filiali_info) {
-?>
-<caption><span class="ReportSubTitle"> <?php echo strtoupper($row_filiali_info['filiali']); ?> </span></caption>
-<?php
-         $row_filiali_info = $filiali_info->fetch_assoc();
-       }
-    mysqli_free_result($filiali_info);
-?>
-<caption><span class="ReportSubTitle"> <?php echo $v_view_dt; ?> </span></caption>
- <thead>
-    <tr>
-    <th height="0" colspan="12">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr class="line">
-          <td height="0"><DIV class=line></DIV></td>
-        </tr>
-      </table>
-    </th>
-  </tr>
-<?php  if ((isset($_POST["view"])) && ($_POST["view"] != "excel")) {  ?>
-  <tr>
-   <th class="OraColumnHeader"> Nr. </th>
-   <th class="OraColumnHeader"> Nr. Fature </th>
-   <th class="OraColumnHeader"> Dt. Trans. </th>
-   <th class="OraColumnHeader"> Emri / Mbiemri </th>
-   <th class="OraColumnHeader"> Blere </th>
-   <th class="OraColumnHeader"> Shitur </th>
-   <th class="OraColumnHeader"> Shuma Blere </th>
-   <th class="OraColumnHeader"> Kursi </th>
-   <th class="OraColumnHeader"> Shuma Shitur </th>
-   <th class="OraColumnHeader"> Komisioni </th>
-   <th class="OraColumnHeader"> Shuma e paguar </th>
-   <th class="OraColumnHeader"> Perdoruesi </th>
-  </tr>
-<?php  }  ?>
- </thead>
- <tbody>
-
-<?php
-
+    //----------------------------------------------------------------------------------------------------
     set_time_limit(0);
 
-    $v_wheresql = "";
-    if ($_SESSION['Usertype'] == 2)  $v_wheresql = " and ek.id_llogfilial = ". $_SESSION['Userfilial'] ." ";
-    if ($_SESSION['Usertype'] == 3)  $v_wheresql = " and ek.perdoruesi    = '". $_SESSION['Username'] ."' ";
+    $worksheet1 = &$workbook->addWorksheet('Veprimet');
 
-   // mysql_select_db($database_MySQL, $MySQL);
-    $RepInfo_sql = " select ek.*, ed.*, k.emri, k.mbiemri, m1.monedha as mon1, m2.monedha as mon2
+    $worksheet1->write(0,  0,  "", $format8);
+    $worksheet1->write(0,  1,  "", $format8);
+    $worksheet1->write(0,  2,  "", $format8);
+    $worksheet1->write(0,  3,  "", $format8);
+    $worksheet1->write(0,  4,  "", $format8);
+    $worksheet1->write(0,  5,  "", $format8);
+    $worksheet1->write(0,  6,  "", $format8);
+    $worksheet1->write(0,  7,  "", $format8);
+    $worksheet1->write(0,  8,  "", $format8);
+    $worksheet1->write(0,  9,  "", $format8);
+    $worksheet1->write(0, 10,  "", $format8);
+
+    $worksheet1->write(1,  0, "", $format8);
+    $worksheet1->write(1,  1, "Raport per transaksionet ditore/periodike (" . $v_view_dt . ")", $format8);
+    $worksheet1->write(1,  2, "", $format8);
+    $worksheet1->write(1,  3, "", $format8);
+    $worksheet1->write(1,  4, "", $format8);
+    $worksheet1->write(1,  5, "", $format8);
+    $worksheet1->write(1,  6, "", $format8);
+    $worksheet1->write(1,  7, "", $format8);
+    $worksheet1->write(1,  8, "", $format8);
+    $worksheet1->write(1,  9, "", $format8);
+    $worksheet1->write(1, 10, "", $format8);
+    $worksheet1->setMerge(1, 1, 1, 9);
+
+    $worksheet1->write(2,  0,  "", $format8);
+    $worksheet1->write(2,  1,  "", $format8);
+    $worksheet1->write(2,  2,  "", $format8);
+    $worksheet1->write(2,  3,  "", $format8);
+    $worksheet1->write(2,  4,  "", $format8);
+    $worksheet1->write(2,  5,  "", $format8);
+    $worksheet1->write(2,  6,  "", $format8);
+    $worksheet1->write(2,  7,  "", $format8);
+    $worksheet1->write(2,  8,  "", $format8);
+    $worksheet1->write(2,  9,  "", $format8);
+    $worksheet1->write(2, 10,  "", $format8);
+
+    $worksheet1->setRow(3, 30);
+    $worksheet1->write(3,  0,  "", $format8);
+    $worksheet1->write(3,  1, "Nr. Fature", $format1);
+    $worksheet1->write(3,  2, "Date", $format1);
+    $worksheet1->write(3,  3, "Emri / Mbiemri", $format1);
+    $worksheet1->write(3,  4, "Blere", $format1);
+    $worksheet1->write(3,  5, "Shuma e blere", $format1);
+    $worksheet1->write(3,  6, "Shitur", $format1);
+    $worksheet1->write(3,  7, "Shuma e shitur", $format1);
+    $worksheet1->write(3,  8, "Kursi", $format1);
+    $worksheet1->write(3,  9, "Shuma e paguar", $format1);
+    $worksheet1->write(3, 10, "", $format8);
+
+    $worksheet1->setColumn(0,  0,  2);
+    $worksheet1->setColumn(1,  1, 15);
+    $worksheet1->setColumn(2,  2, 18);
+    $worksheet1->setColumn(3,  3, 25);
+    $worksheet1->setColumn(4,  4, 10);
+    $worksheet1->setColumn(5,  5, 15);
+    $worksheet1->setColumn(6,  6, 10);
+    $worksheet1->setColumn(7,  7, 15);
+    $worksheet1->setColumn(8,  8, 10);
+    $worksheet1->setColumn(9,  9, 20);
+    $worksheet1->setColumn(10, 10,  2);
+
+    $v_rowno = 3;
+  }
+
+?>
+
+
+  <!-- --------------------------------------- -->
+  <!--          Aplikacioni xChange            -->
+  <!--                                         -->
+  <!--  Kontakt:                               -->
+  <!--                                         -->
+  <!--           GlobalTech.al                 -->
+  <!--                                         -->
+  <!--        info@globaltech.al               -->
+  <!-- --------------------------------------- -->
+
+
+  <html>
+
+  <head>
+
+    <title><?php echo $_SESSION['CNAME']; ?> - Web Exchange System - Raport per transaksionet ditore/periodike</title>
+
+    <link href="rep.css" rel="stylesheet" type="text/css">
+
+  </head>
+
+  <body leftmargin=0 topmargin=0 marginheight="0" marginwidth="0" bgcolor=#ffffff vlink="#0000ff" link="#0000ff">
+
+    <TABLE border=0 cellPadding=0 cellSpacing=0 width="100%">
+      <TBODY>
+        <TR>
+          <TD bgColor=#ffffff rowSpan=2 vAlign=center width=188>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<IMG src="images/logo.png" width="auto" height="36"><br>
+            </p>
+          </TD>
+          <TD bgColor=#ffffff height=40 vAlign=top><IMG alt="" height=1 src="images/stretch.gif" width=5></TD>
+          <TD align=center bgColor=#ffffff height=40 vAlign=middle><span class="titull"><b> <?php echo $_SESSION['CNAME']; ?> - Web Exchange System</b></span></TD>
+          <TD align=right bgColor=#ffffff vAlign=bottom>
+            <span class="ReportDateUserN">
+              Printuar dt. </span><span class="ReportDateUserB"><?php echo strftime('%Y-%m-%d'); ?></span>
+            <span class="ReportDateUserN">P&euml;rdoruesi: </span><span class="ReportDateUserB"><?php echo $user_info; ?>
+            </span>
+          </TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+    <TABLE bgColor=#ff0000 border=0 cellPadding=0 cellSpacing=0 width="100%">
+      <TBODY>
+        <TR>
+          <TD bgColor=#ff0000 class="OraColumnHeader">&nbsp; </TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+    <TABLE border=0 cellPadding=0 cellSpacing=0 width="100%">
+      <TBODY>
+        <TR>
+          <TD bgColor=#ff0000 vAlign=top class="OraColumnHeader"><IMG alt="" border=0 height=17 src="images/topcurl.gif" width=30></TD>
+          <TD vAlign=top width="100%">
+            <TABLE border=0 cellPadding=0 cellSpacing=0 width="100%">
+              <TBODY>
+                <TR>
+                  <TD bgColor=#000000 height=1><IMG alt="" border=0 height=1 src="images/stretch.gif" width=1></TD>
+                </TR>
+                <TR>
+                  <TD bgColor=#9a9c9a height=1><IMG alt="" border=0 height=1 src="images/stretch.gif" width=1></TD>
+                </TR>
+                <TR>
+                  <TD bgColor=#b3b4b3 height=1><IMG alt="" border=0 height=1 src="images/stretch.gif" width=1></TD>
+                </TR>
+              </TBODY>
+            </TABLE>
+          </TD>
+        </TR>
+      </TBODY>
+    </TABLE>
+    <TABLE width="100%" border="0" cellspacing="0" cellpadding="0">
+      <TR>
+        <TD width="100%">
+          <DIV align="center">
+            <table class="OraTable">
+              <caption><span class="ReportTitle"> Raport per transaksionet ditore/periodike </span></caption>
+              <?php
+              //mysql_select_db($database_MySQL, $MySQL);
+              $query_filiali_info = "select * from filiali where id = " . $v_branch_id;
+              $filiali_info = mysqli_query($MySQL, $query_filiali_info) or die(mysql_error());
+              $row_filiali_info = $filiali_info->fetch_assoc();
+
+              while ($row_filiali_info) {
+              ?>
+                <caption><span class="ReportSubTitle"> <?php echo strtoupper($row_filiali_info['filiali']); ?> </span></caption>
+              <?php
+                $row_filiali_info = $filiali_info->fetch_assoc();
+              }
+              mysqli_free_result($filiali_info);
+              ?>
+              <caption><span class="ReportSubTitle"> <?php echo $v_view_dt; ?> </span></caption>
+              <thead>
+                <tr>
+                  <th height="0" colspan="12">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr class="line">
+                        <td height="0">
+                          <DIV class=line></DIV>
+                        </td>
+                      </tr>
+                    </table>
+                  </th>
+                </tr>
+                <?php if ((isset($_POST["view"])) && ($_POST["view"] != "excel")) {  ?>
+                  <tr>
+                    <th class="OraColumnHeader"> Nr. </th>
+                    <th class="OraColumnHeader"> Nr. Fature </th>
+                    <th class="OraColumnHeader"> Dt. Trans. </th>
+                    <th class="OraColumnHeader"> Emri / Mbiemri </th>
+                    <th class="OraColumnHeader"> Blere </th>
+                    <th class="OraColumnHeader"> Shitur </th>
+                    <th class="OraColumnHeader"> Shuma Blere </th>
+                    <th class="OraColumnHeader"> Kursi </th>
+                    <th class="OraColumnHeader"> Shuma Shitur </th>
+                    <th class="OraColumnHeader"> Komisioni </th>
+                    <th class="OraColumnHeader"> Shuma e paguar </th>
+                    <th class="OraColumnHeader"> Perdoruesi </th>
+                  </tr>
+                <?php  }  ?>
+              </thead>
+              <tbody>
+
+                <?php
+
+                set_time_limit(0);
+
+                $v_wheresql = "";
+                if ($_SESSION['Usertype'] == 2)  $v_wheresql = " and ek.id_llogfilial = " . $_SESSION['Userfilial'] . " ";
+                if ($_SESSION['Usertype'] == 3)  $v_wheresql = " and ek.perdoruesi    = '" . $_SESSION['Username'] . "' ";
+
+                // mysql_select_db($database_MySQL, $MySQL);
+                $RepInfo_sql = " select ek.*, ed.*, k.emri, k.mbiemri, m1.monedha as mon1, m2.monedha as mon2
                        from exchange_koke as ek,
                             exchange_detaje as ed,
                             klienti as k,
@@ -394,148 +462,158 @@ if (isset($_SESSION['uid'])) {
                       where ek.chstatus       = 'T'
                         and ek.tipiveprimit   = 'CHN'
                         and ek.id             = ed.id_exchangekoke
-                        and ek.id_llogfilial  = ". $v_branch_id ."
-                         ". $v_perioddate ."
-                         ". $v_wheresql   ."
+                        and ek.id_llogfilial  = " . $v_branch_id . "
+                         " . $v_perioddate . "
+                         " . $v_wheresql   . "
                         and ek.id_klienti     = k.id
                         and ek.id_monkreditim = m1.id
                         and ed.id_mondebituar = m2.id
                    ";
 
-    $RepInfoRS   = mysqli_query($MySQL,$RepInfo_sql) or die(mysql_error());
-    $row_RepInfo = $RepInfoRS->fetch_assoc();
-    $rowno       = 0;
+                $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysql_error());
+                $row_RepInfo = $RepInfoRS->fetch_assoc();
+                $rowno       = 0;
 
-  while ($row_RepInfo) {  $rowno ++;
+                while ($row_RepInfo) {
+                  $rowno++;
 
-    $v_kursi = 0;
-    if ($row_RepInfo['kursi'] > $row_RepInfo['kursi1']) {
-       $v_kursi = $row_RepInfo['kursi'];
-     }
-    else {
-       $v_kursi = $row_RepInfo['kursi1'];
-    }
+                  $v_kursi = 0;
+                  if ($row_RepInfo['kursi'] > $row_RepInfo['kursi1']) {
+                    $v_kursi = $row_RepInfo['kursi'];
+                  } else {
+                    $v_kursi = $row_RepInfo['kursi1'];
+                  }
 
-    if ((isset($_POST["view"])) && ($_POST["view"] == "excel")) {
+                  if ((isset($_POST["view"])) && ($_POST["view"] == "excel")) {
 
-         //------------- write excel information --------------------------------------------------
-         $v_rowno ++;
-         $worksheet1->write($v_rowno,        0, "", $format8);
-         $worksheet1->write($v_rowno,        1, $row_RepInfo['id_llogfilial']."-".$row_RepInfo['unique_id'], $format4);
-         $worksheet1->write($v_rowno,        2, substr($row_RepInfo['datarregjistrimit'], 8, 2) .".". substr($row_RepInfo['datarregjistrimit'], 5, 2) .".". substr($row_RepInfo['datarregjistrimit'], 0, 4) ." ". substr($row_RepInfo['datarregjistrimit'], 11, 8), $format4);
-         $worksheet1->write($v_rowno,        3, $row_RepInfo['emri'] ." ". $row_RepInfo['mbiemri'], $format4);
+                    //------------- write excel information --------------------------------------------------
+                    $v_rowno++;
+                    $worksheet1->write($v_rowno,        0, "", $format8);
+                    $worksheet1->write($v_rowno,        1, $row_RepInfo['id_llogfilial'] . "-" . $row_RepInfo['unique_id'], $format4);
+                    $worksheet1->write($v_rowno,        2, substr($row_RepInfo['datarregjistrimit'], 8, 2) . "." . substr($row_RepInfo['datarregjistrimit'], 5, 2) . "." . substr($row_RepInfo['datarregjistrimit'], 0, 4) . " " . substr($row_RepInfo['datarregjistrimit'], 11, 8), $format4);
+                    $worksheet1->write($v_rowno,        3, $row_RepInfo['emri'] . " " . $row_RepInfo['mbiemri'], $format4);
 
-         $worksheet1->write($v_rowno,        4, $row_RepInfo['mon2'], $format4);
-         $worksheet1->writeNumber($v_rowno,  5, number_format( $row_RepInfo['vleftadebituar'], 2, '.', ''), $format5);
+                    $worksheet1->write($v_rowno,        4, $row_RepInfo['mon2'], $format4);
+                    $worksheet1->writeNumber($v_rowno,  5, number_format($row_RepInfo['vleftadebituar'], 2, '.', ''), $format5);
 
-         $worksheet1->write($v_rowno,        6, $row_RepInfo['mon1'], $format4);
-         $worksheet1->writeNumber($v_rowno,  7, number_format( $row_RepInfo['vleftakredituar'], 2, '.', ''), $format5);
+                    $worksheet1->write($v_rowno,        6, $row_RepInfo['mon1'], $format4);
+                    $worksheet1->writeNumber($v_rowno,  7, number_format($row_RepInfo['vleftakredituar'], 2, '.', ''), $format5);
 
-         $worksheet1->writeNumber($v_rowno,  8, number_format( $v_kursi, 4, '.', ''), $format5);
+                    $worksheet1->writeNumber($v_rowno,  8, number_format($v_kursi, 4, '.', ''), $format5);
 
-         $worksheet1->writeNumber($v_rowno,  9, number_format( $row_RepInfo['vleftapaguar'], 2, '.', ''), $format5);
+                    $worksheet1->writeNumber($v_rowno,  9, number_format($row_RepInfo['vleftapaguar'], 2, '.', ''), $format5);
 
-         $worksheet1->write($v_rowno,       10, "", $format8);
-         //------------- write excel information --------------------------------------------------
-    }
+                    $worksheet1->write($v_rowno,       10, "", $format8);
+                    //------------- write excel information --------------------------------------------------
+                  }
 
-?>
-<?php  if ((isset($_POST["view"])) && ($_POST["view"] != "excel")) {  ?>
-  <tr>
-    <td height="0" colspan="12">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr class="line">
-          <td height="0"><DIV class=line></DIV></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" class="OraCellGroup" ><?php echo $rowno; ?></td>
-    <td align="center" class="OraCellGroup2"><?php echo $row_RepInfo['id_llogfilial']."-".$row_RepInfo['unique_id']; ?></td>
-    <td align="center" class="OraCellGroup2"><?php echo substr($row_RepInfo['datarregjistrimit'], 8, 2) .".". substr($row_RepInfo['datarregjistrimit'], 5, 2) .".". substr($row_RepInfo['datarregjistrimit'], 0, 4) ." ". substr($row_RepInfo['datarregjistrimit'], 11, 8); ?></td>
-    <td align="center" class="OraCellGroup3"><?php echo $row_RepInfo['emri']; ?> <?php echo $row_RepInfo['mbiemri']; ?></td>
-    <td align="center" class="OraCellGroup2"><?php echo $row_RepInfo['mon2']; ?></td>
-    <td align="center" class="OraCellGroup2"><?php echo $row_RepInfo['mon1']; ?></td>
-    <td align="right"  class="OraCellGroup2"><?php echo number_format($row_RepInfo['vleftadebituar'], 2, '.', ','); ?>&nbsp;&nbsp;</td>
-    <td align="right"  class="OraCellGroup2"><?php echo number_format($v_kursi, 4, '.', ','); ?>&nbsp;&nbsp;</td>
-    <td align="right"  class="OraCellGroup2"><?php echo number_format($row_RepInfo['vleftakredituar'], 2, '.', ','); ?>&nbsp;&nbsp;</td>
-    <td align="right"  class="OraCellGroup2"><?php echo number_format($row_RepInfo['vleftakomisionit'], 2, '.', ','); ?>&nbsp;&nbsp;</td>
-    <td align="right"  class="OraCellGroup2"><?php echo number_format($row_RepInfo['vleftapaguar'], 2, '.', ','); ?>&nbsp;&nbsp;</td>
-    <td align="center" class="OraCellGroup2"><?php echo $row_RepInfo['perdoruesi']; ?></td>
-  </tr>
-  <?php  }  ?>
-  <?php     $row_RepInfo = $RepInfoRS->fetch_assoc();
-         };
-    mysqli_free_result($RepInfoRS);
-?>
-<?php    if ((isset($_POST["view"])) && ($_POST["view"] == "excel")) {
+                ?>
+                  <?php if ((isset($_POST["view"])) && ($_POST["view"] != "excel")) {  ?>
+                    <tr>
+                      <td height="0" colspan="12">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                          <tr class="line">
+                            <td height="0">
+                              <DIV class=line></DIV>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" class="OraCellGroup"><?php echo $rowno; ?></td>
+                      <td align="center" class="OraCellGroup2"><?php echo $row_RepInfo['id_llogfilial'] . "-" . $row_RepInfo['unique_id']; ?></td>
+                      <td align="center" class="OraCellGroup2"><?php echo substr($row_RepInfo['datarregjistrimit'], 8, 2) . "." . substr($row_RepInfo['datarregjistrimit'], 5, 2) . "." . substr($row_RepInfo['datarregjistrimit'], 0, 4) . " " . substr($row_RepInfo['datarregjistrimit'], 11, 8); ?></td>
+                      <td align="center" class="OraCellGroup3"><?php echo $row_RepInfo['emri']; ?> <?php echo $row_RepInfo['mbiemri']; ?></td>
+                      <td align="center" class="OraCellGroup2"><?php echo $row_RepInfo['mon2']; ?></td>
+                      <td align="center" class="OraCellGroup2"><?php echo $row_RepInfo['mon1']; ?></td>
+                      <td align="right" class="OraCellGroup2"><?php echo number_format($row_RepInfo['vleftadebituar'], 2, '.', ','); ?>&nbsp;&nbsp;</td>
+                      <td align="right" class="OraCellGroup2"><?php echo number_format($v_kursi, 4, '.', ','); ?>&nbsp;&nbsp;</td>
+                      <td align="right" class="OraCellGroup2"><?php echo number_format($row_RepInfo['vleftakredituar'], 2, '.', ','); ?>&nbsp;&nbsp;</td>
+                      <td align="right" class="OraCellGroup2"><?php echo number_format($row_RepInfo['vleftakomisionit'], 2, '.', ','); ?>&nbsp;&nbsp;</td>
+                      <td align="right" class="OraCellGroup2"><?php echo number_format($row_RepInfo['vleftapaguar'], 2, '.', ','); ?>&nbsp;&nbsp;</td>
+                      <td align="center" class="OraCellGroup2"><?php echo $row_RepInfo['perdoruesi']; ?></td>
+                    </tr>
+                  <?php  }  ?>
+                <?php $row_RepInfo = $RepInfoRS->fetch_assoc();
+                };
+                mysqli_free_result($RepInfoRS);
+                ?>
+                <?php if ((isset($_POST["view"])) && ($_POST["view"] == "excel")) {
 
-             $v_rowno ++;
-             $worksheet1->write($v_rowno,  0,  "", $format8);
-             $worksheet1->write($v_rowno,  1,  "", $format8);
-             $worksheet1->write($v_rowno,  2,  "", $format8);
-             $worksheet1->write($v_rowno,  3,  "", $format8);
-             $worksheet1->write($v_rowno,  4,  "", $format8);
-             $worksheet1->write($v_rowno,  5,  "", $format8);
-             $worksheet1->write($v_rowno,  6,  "", $format8);
-             $worksheet1->write($v_rowno,  7,  "", $format8);
-             $worksheet1->write($v_rowno,  8,  "", $format8);
-             $worksheet1->write($v_rowno,  9,  "", $format8);
-             $worksheet1->write($v_rowno, 10,  "", $format8);
-           //----------------------------------------------------
-             $workbook->close();
-           //----------------------------------------------------
-?>
-  <tr>
-    <td height="0" colspan="12">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr class="line">
-          <td height="0"><DIV class=line></DIV></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr bgcolor="#A7CCBA">
-    <td align="center" class="OraCellGroup" colspan="12"><b>&nbsp;<a href="<?php echo $v_file; ?>"><?php echo $v_file; ?></a>&nbsp;</b></td>
-  </tr>
-<?php    }    ?>
-  <tr>
-    <td height="0" colspan="12">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr class="line">
-          <td height="0"><DIV class=line></DIV></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td height="0" colspan="12">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr class="line">
-          <td height="0"><DIV class=line></DIV></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" class="OraCellGroup4" colspan="3">&nbsp;<b>Monedha</b>&nbsp;</td>
-    <td align="right"  class="OraCellGroup4" colspan="3">&nbsp;<b>Shuma e hyr&euml;</b>&nbsp;</td>
-    <td align="right"  class="OraCellGroup4" colspan="3">&nbsp;<b>Komisioni</b>&nbsp;</td>
-    <td align="right"  class="OraCellGroup4" colspan="3">&nbsp;<b>Shuma e dal&euml;</b>&nbsp;</td>
-  </tr>
-  <tr>
-    <td height="0" colspan="12">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr class="line">
-          <td height="0"><DIV class=line></DIV></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-<?php
+                  $v_rowno++;
+                  $worksheet1->write($v_rowno,  0,  "", $format8);
+                  $worksheet1->write($v_rowno,  1,  "", $format8);
+                  $worksheet1->write($v_rowno,  2,  "", $format8);
+                  $worksheet1->write($v_rowno,  3,  "", $format8);
+                  $worksheet1->write($v_rowno,  4,  "", $format8);
+                  $worksheet1->write($v_rowno,  5,  "", $format8);
+                  $worksheet1->write($v_rowno,  6,  "", $format8);
+                  $worksheet1->write($v_rowno,  7,  "", $format8);
+                  $worksheet1->write($v_rowno,  8,  "", $format8);
+                  $worksheet1->write($v_rowno,  9,  "", $format8);
+                  $worksheet1->write($v_rowno, 10,  "", $format8);
+                  //----------------------------------------------------
+                  $workbook->close();
+                  //----------------------------------------------------
+                ?>
+                  <tr>
+                    <td height="0" colspan="12">
+                      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr class="line">
+                          <td height="0">
+                            <DIV class=line></DIV>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr bgcolor="#A7CCBA">
+                    <td align="center" class="OraCellGroup" colspan="12"><b>&nbsp;<a href="<?php echo $v_file; ?>"><?php echo $v_file; ?></a>&nbsp;</b></td>
+                  </tr>
+                <?php    }    ?>
+                <tr>
+                  <td height="0" colspan="12">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr class="line">
+                        <td height="0">
+                          <DIV class=line></DIV>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td height="0" colspan="12">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr class="line">
+                        <td height="0">
+                          <DIV class=line></DIV>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" class="OraCellGroup4" colspan="3">&nbsp;<b>Monedha</b>&nbsp;</td>
+                  <td align="right" class="OraCellGroup4" colspan="3">&nbsp;<b>Shuma e hyr&euml;</b>&nbsp;</td>
+                  <td align="right" class="OraCellGroup4" colspan="3">&nbsp;<b>Komisioni</b>&nbsp;</td>
+                  <td align="right" class="OraCellGroup4" colspan="3">&nbsp;<b>Shuma e dal&euml;</b>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td height="0" colspan="12">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr class="line">
+                        <td height="0">
+                          <DIV class=line></DIV>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <?php
 
-    $RepInfo_sql = " select info.mon, sum(info.vlerakredit) as vlerakredit, sum(info.komision) as komision, sum(info.vleradebit) as vleradebit
+                $RepInfo_sql = " select info.mon, sum(info.vlerakredit) as vlerakredit, sum(info.komision) as komision, sum(info.vleradebit) as vleradebit
                        from (
                                     select 0 as vlerakredit, sum(ek.vleftakomisionit) as komision, sum(ek.vleftapaguar) as vleradebit, m1.id, m1.monedha as mon
                                       from exchange_koke as ek,
@@ -543,9 +621,9 @@ if (isset($_SESSION['uid'])) {
                                            monedha as m1
                                      where ek.chstatus       = 'T'
                                        and ek.tipiveprimit   = 'CHN'
-                                       and ek.id_llogfilial  = ". $v_branch_id ."
-                                       ". $v_perioddate ."
-                                       ". $v_wheresql   ."
+                                       and ek.id_llogfilial  = " . $v_branch_id . "
+                                       " . $v_perioddate . "
+                                       " . $v_wheresql   . "
                                        and ek.id_klienti     = k.id
                                        and ek.id_monkreditim = m1.id
                                   group by m1.id, m1.monedha
@@ -558,9 +636,9 @@ if (isset($_SESSION['uid'])) {
                                      where ek.chstatus       = 'T'
                                        and ek.tipiveprimit   = 'CHN'
                                        and ek.id             = ed.id_exchangekoke
-                                       and ek.id_llogfilial  = ". $v_branch_id ."
-                                       ". $v_perioddate ."
-                                       ". $v_wheresql   ."
+                                       and ek.id_llogfilial  = " . $v_branch_id . "
+                                       " . $v_perioddate . "
+                                       " . $v_wheresql   . "
                                        and ek.id_klienti     = k.id
                                        and ed.id_mondebituar = m2.id
                                   group by m2.id, m2.monedha
@@ -568,134 +646,140 @@ if (isset($_SESSION['uid'])) {
                      group by info.mon, info.id
                      order by info.id ";
 
-    $RepInfoRS   = mysqli_query($MySQL,$RepInfo_sql) or die(mysql_error());
-    $row_RepInfo = $RepInfoRS->fetch_assoc();
+                $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysql_error());
+                $row_RepInfo = $RepInfoRS->fetch_assoc();
 
-  while ($row_RepInfo) {
-?>
-  <tr>
-    <td align="center" class="OraCellGroup"  colspan="3"> <?php echo $row_RepInfo['mon']; ?> </td>
-    <td align="right"  class="OraCellGroup2" colspan="3"><?php echo number_format($row_RepInfo['vlerakredit'], 2, '.', ','); ?>&nbsp;&nbsp;</td>
-    <td align="right"  class="OraCellGroup2" colspan="3"><?php echo number_format($row_RepInfo['komision'], 2, '.', ','); ?>&nbsp;&nbsp;</td>
-    <td align="right"  class="OraCellGroup2" colspan="3"><?php echo number_format($row_RepInfo['vleradebit'], 2, '.', ','); ?>&nbsp;&nbsp;</td>
-  </tr>
-  <tr>
-    <td height="0" colspan="12">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr class="line">
-          <td height="0"><DIV class=line></DIV></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <?php     $row_RepInfo = $RepInfoRS->fetch_assoc();
-         };
-    mysqli_free_result($RepInfoRS);
-?>
-  <tr>
-    <td height="0" colspan="12">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr class="line">
-          <td height="0"><DIV class=line></DIV></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td align="left" class="OraCellGroup4" colspan="12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Totali i transaksioneve:</b>&nbsp;&nbsp;<b>[ <?php echo $rowno; ?> ]</b>&nbsp;</td>
-  </tr>
-  <tr>
-    <td height="0" colspan="12">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr class="line">
-          <td height="0"><DIV class=line></DIV></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td height="5" colspan="12"></td>
-  </tr>
-</table>
-      </DIV>
-    </TD>
-  </TR>
-</TABLE>
+                while ($row_RepInfo) {
+                ?>
+                  <tr>
+                    <td align="center" class="OraCellGroup" colspan="3"> <?php echo $row_RepInfo['mon']; ?> </td>
+                    <td align="right" class="OraCellGroup2" colspan="3"><?php echo number_format($row_RepInfo['vlerakredit'], 2, '.', ','); ?>&nbsp;&nbsp;</td>
+                    <td align="right" class="OraCellGroup2" colspan="3"><?php echo number_format($row_RepInfo['komision'], 2, '.', ','); ?>&nbsp;&nbsp;</td>
+                    <td align="right" class="OraCellGroup2" colspan="3"><?php echo number_format($row_RepInfo['vleradebit'], 2, '.', ','); ?>&nbsp;&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td height="0" colspan="12">
+                      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr class="line">
+                          <td height="0">
+                            <DIV class=line></DIV>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                <?php $row_RepInfo = $RepInfoRS->fetch_assoc();
+                };
+                mysqli_free_result($RepInfoRS);
+                ?>
+                <tr>
+                  <td height="0" colspan="12">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr class="line">
+                        <td height="0">
+                          <DIV class=line></DIV>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="left" class="OraCellGroup4" colspan="12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Totali i transaksioneve:</b>&nbsp;&nbsp;<b>[ <?php echo $rowno; ?> ]</b>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td height="0" colspan="12">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr class="line">
+                        <td height="0">
+                          <DIV class=line></DIV>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td height="5" colspan="12"></td>
+                </tr>
+            </table>
+          </DIV>
+        </TD>
+      </TR>
+    </TABLE>
 
-<TABLE border=0 cellPadding=0 cellSpacing=0 width="100%">
-  <TBODY>
-  <TR>
-    <TD bgColor=#000000 colSpan=2><IMG alt=" " border=0 height=1 src="images/stretch.gif" width=1></TD>
-  </TR>
-  <TR>
-    <TD bgColor=#ff0000 colSpan=2 class="OraColumnHeader"><IMG alt=" " border=0 height=4 src="images/stretch.gif" width=1></TD>
-  </TR>
-  <TR>
-    <TD bgColor=#000000 colSpan=2><IMG alt=" " border=0 height=1 src="images/stretch.gif" width=1></TD>
-  </TR>
-  <TR>
-    <TD bgColor=#ffffff>&nbsp;<span class="ReportDateUserB">    </span></TD>
-    <TD align=right bgColor=#ffffff>&nbsp;</TD>
-  </TR>
-  </TBODY>
-</TABLE>
+    <TABLE border=0 cellPadding=0 cellSpacing=0 width="100%">
+      <TBODY>
+        <TR>
+          <TD bgColor=#000000 colSpan=2><IMG alt=" " border=0 height=1 src="images/stretch.gif" width=1></TD>
+        </TR>
+        <TR>
+          <TD bgColor=#ff0000 colSpan=2 class="OraColumnHeader"><IMG alt=" " border=0 height=4 src="images/stretch.gif" width=1></TD>
+        </TR>
+        <TR>
+          <TD bgColor=#000000 colSpan=2><IMG alt=" " border=0 height=1 src="images/stretch.gif" width=1></TD>
+        </TR>
+        <TR>
+          <TD bgColor=#ffffff>&nbsp;<span class="ReportDateUserB"> </span></TD>
+          <TD align=right bgColor=#ffffff>&nbsp;</TD>
+        </TR>
+      </TBODY>
+    </TABLE>
 
-</body>
+  </body>
 
-</html>
+  </html>
 <?php  }  ?>
 
 
 <script>
-// Disable right-click context menu
-document.addEventListener('contextmenu', event => event.preventDefault());
+  // Disable right-click context menu
+  document.addEventListener('contextmenu', event => event.preventDefault());
 </script>
 
 <script>
-// Disable keyCode
-document.addEventListener('keydown', e => {
-  if 
-  // Disable F1
-  (e.keyCode === 112 || 
+  // Disable keyCode
+  document.addEventListener('keydown', e => {
+    if
+    // Disable F1
+    (e.keyCode === 112 ||
 
-  // Disable F3
-  e.keyCode === 114 || 
+      // Disable F3
+      e.keyCode === 114 ||
 
-  // Disable F5
-  e.keyCode === 116 || 
+      // Disable F5
+      e.keyCode === 116 ||
 
-  // Disable F6
-  e.keyCode === 117 || 
+      // Disable F6
+      e.keyCode === 117 ||
 
-  // Disable F7
-  e.keyCode === 118 || 
+      // Disable F7
+      e.keyCode === 118 ||
 
-  // Disable F10
-  e.keyCode === 121 || 
+      // Disable F10
+      e.keyCode === 121 ||
 
-  // Disable F11
-  e.keyCode === 122 || 
+      // Disable F11
+      e.keyCode === 122 ||
 
-  // Disable F12
-  e.keyCode === 123 || 
-  
-  // Disable Ctrl
-  e.ctrlKey || 
-  
-  // Disable Shift
-  e.shiftKey  || 
-  
-  // Disable Alt
-  e.altKey  || 
-  
-  // Disable Ctrl+Shift+Key
-  e.ctrlKey && e.shiftKey || 
+      // Disable F12
+      e.keyCode === 123 ||
 
-  // Disable Ctrl+Shift+alt
-  e.ctrlKey && e.shiftKey && e.altKey
-  ) {
-    e.preventDefault();
-    //alert('Not Allowed');
-  }
-});
+      // Disable Ctrl
+      e.ctrlKey ||
+
+      // Disable Shift
+      e.shiftKey ||
+
+      // Disable Alt
+      e.altKey ||
+
+      // Disable Ctrl+Shift+Key
+      e.ctrlKey && e.shiftKey ||
+
+      // Disable Ctrl+Shift+alt
+      e.ctrlKey && e.shiftKey && e.altKey
+    ) {
+      e.preventDefault();
+      //alert('Not Allowed');
+    }
+  });
 </script>

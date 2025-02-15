@@ -13,4 +13,3 @@ $MySQL = new mysqli($hostname_MySQL, $username_MySQL, $password_MySQL, $database
 if ($MySQL->connect_error) {
     die("Connection failed: " . $MySQL->connect_error);
 }
-?>
