@@ -17,7 +17,7 @@ if (isset($_SESSION['uid'])) {
       $colname_menu_info = $_GET['hid'] ?? addslashes($_GET['hid']);
       //mysql_select_db($database_MySQL, $MySQL);
       $query_menu_info = sprintf("SELECT * FROM filiali WHERE id = %s", $colname_menu_info);
-      $menu_info = mysqli_query($MySQL, $query_menu_info) or die(mysql_error());
+      $menu_info = mysqli_query($MySQL, $query_menu_info) or die(mysqli_error($MySQL));
       $row_menu_info = $menu_info->fetch_assoc();
       $totalRows_menu_info = $menu_info->num_rows;
 
@@ -97,7 +97,7 @@ if (isset($_SESSION['uid'])) {
     );
 
     //mysql_select_db($database_MySQL, $MySQL);
-    $Result1 = mysqli_query($MySQL, $updateSQL) or die(mysql_error());
+    $Result1 = mysqli_query($MySQL, $updateSQL) or die(mysqli_error($MySQL));
 
     $updateGoTo = "exchange_account.php";
 
@@ -120,7 +120,7 @@ if (isset($_SESSION['uid'])) {
     );
 
     //mysql_select_db($database_MySQL, $MySQL);
-    $Result1 = mysqli_query($MySQL, $insertSQL) or die(mysql_error());
+    $Result1 = mysqli_query($MySQL, $insertSQL) or die(mysqli_error($MySQL));
 
 
     $updateGoTo = "exchange_account.php";
@@ -284,7 +284,7 @@ if (isset($_SESSION['uid'])) {
             <DIV class=ctxheading>
 
               <form enctype="multipart/form-data" ACTION="insupd_account_data.php" METHOD="POST" name="formmenu" onsubmit="return checkform(this);">
-                <input name="form_action" type="hidden" value="<?php echo $_GET[action]; ?>">
+                <input name="form_action" type="hidden" value="<?php echo $_GET['action']; ?>">
                 <input name="id" type="hidden" value="<?php echo $id; ?>">
                 <table width="100%" border="0" cellpadding="0" cellspacing="5">
                   <tr>

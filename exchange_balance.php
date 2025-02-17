@@ -251,7 +251,7 @@ if (isset($_SESSION['uid'])) {
                                     " . $v_wheresql . "
                               GROUP BY openbalance.id, filiali.filiali, monedha.monedha
                               ORDER BY filiali.filiali, openbalance.monedha_id ";
-                    $gjendje_info     = mysqli_query($MySQL, $query_gjendje_info) or die(mysql_error());
+                    $gjendje_info     = mysqli_query($MySQL, $query_gjendje_info) or die(mysqli_error($MySQL));
                     $row_gjendje_info = $gjendje_info->fetch_assoc();
 
                     while ($row_gjendje_info) {
@@ -315,7 +315,7 @@ if (isset($_SESSION['uid'])) {
                                     " . $v_wheresql . "
                               GROUP BY hyrjedalje.id_klienti, klienti.emri, klienti.mbiemri, hyrjedalje.id_monedhe, monedha.monedha
                               ORDER BY klienti.emri, klienti.mbiemri, hyrjedalje.id_monedhe ";
-                    $gjendje_info     = mysqli_query($MySQL, $query_gjendje_info) or die(mysql_error());
+                    $gjendje_info     = mysqli_query($MySQL, $query_gjendje_info) or die(mysqli_error($MySQL));
                     $row_gjendje_info = $gjendje_info->fetch_assoc();
 
                     while ($row_gjendje_info) {
@@ -424,7 +424,7 @@ if (isset($_SESSION['uid'])) {
                                        ) tab_info
                                group by tab_info.llogaria, tab_info.id
                                order by tab_info.llogaria, tab_info.id";
-                    $gjendje_info     = mysqli_query($MySQL, $query_gjendje_info) or die(mysql_error());
+                    $gjendje_info     = mysqli_query($MySQL, $query_gjendje_info) or die(mysqli_error($MySQL));
                     $row_gjendje_info = $gjendje_info->fetch_assoc();
 
                     while ($row_gjendje_info) {
@@ -507,7 +507,7 @@ if (isset($_SESSION['uid'])) {
                                       ) tab_info
                              group by tab_info.id
                              order by tab_info.id ";
-                    $gjendje_info = mysqli_query($MySQL, $query_gjendje_info) or die(mysql_error());
+                    $gjendje_info = mysqli_query($MySQL, $query_gjendje_info) or die(mysqli_error($MySQL));
                     $row_gjendje_info = $gjendje_info->fetch_assoc();
 
                     while ($row_gjendje_info) {

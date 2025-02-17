@@ -189,7 +189,7 @@ if (isset($_SESSION['uid'])) {
                 <?php
                 //mysql_select_db($database_MySQL, $MySQL);
                 $data_sql_info = "select app_user.*, filiali.filiali, usertype.description from app_user, filiali, usertype where app_user.id_filiali = filiali.id and app_user.id_usertype = usertype.id";
-                $h_data = mysqli_query($MySQL, $data_sql_info) or die(mysql_error());
+                $h_data = $MySQL->query($data_sql_info) or die(mysqli_error($MySQL));
                 $row_h_data = $h_data->fetch_assoc();
 
                 while ($row_h_data) { ?>

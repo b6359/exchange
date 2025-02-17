@@ -1,46 +1,47 @@
 <?php
+declare(strict_types=1);
 
 session_start();
 date_default_timezone_set('Europe/Tirane');
 
 $logoutAction = $_SERVER['PHP_SELF']."?doLogout=true";
-if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")){
-  $logoutAction .="&". htmlentities($_SERVER['QUERY_STRING']);
+if (!empty($_SERVER['QUERY_STRING'])) {
+    $logoutAction .= "&" . htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES, 'UTF-8');
 }
 
-if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
-  // logout
-  $GLOBALS['uid']         = "";
-  $GLOBALS['Username']    = "";
-  $GLOBALS['full_name']   = "";
-  $GLOBALS['Usertrans']   = "";
-  $GLOBALS['Userfilial']  = "";
-  $GLOBALS['Usertype']    = "";
-  $_SESSION['uid']        = "";
-  $_SESSION['Username']   = "";
-  $_SESSION['full_name']  = "";
-  $_SESSION['Usertrans']  = "";
-  $_SESSION['Userfilial'] = "";
-  $_SESSION['Usertype']   = "";
+if (isset($_GET['doLogout']) && $_GET['doLogout'] === "true") {
+    // logout
+    $GLOBALS['uid']         = "";
+    $GLOBALS['Username']    = "";
+    $GLOBALS['full_name']   = "";
+    $GLOBALS['Usertrans']   = "";
+    $GLOBALS['Userfilial']  = "";
+    $GLOBALS['Usertype']    = "";
+    $_SESSION['uid']        = "";
+    $_SESSION['Username']   = "";
+    $_SESSION['full_name']  = "";
+    $_SESSION['Usertrans']  = "";
+    $_SESSION['Userfilial'] = "";
+    $_SESSION['Usertype']   = "";
 
-  $logoutGoTo = "index.php";
-  if ($logoutGoTo) {
-    header("Location: $logoutGoTo");
-    exit;
-  }
+    $logoutGoTo = "index.php";
+    if ($logoutGoTo) {
+        header("Location: $logoutGoTo");
+        exit;
+    }
 }
 
    require_once('ConMySQL.php');
 
-if ((isset($_SESSION['uid']))&&($_SESSION['Usertype'] != 3)) {
-  $user_info = $_SESSION['Username'] ?? addslashes($_SESSION['Username']);
+if (isset($_SESSION['uid']) && ($_SESSION['Usertype'] ?? '') !== '3') {
+  $user_info = $_SESSION['Username'] ?? '';
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////                                                           /////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "")
+function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = ""): string
 {
-  $theValue = addslashes($theValue) ?? $theValue;
+  $theValue = mysqli_real_escape_string($GLOBALS['MySQL'], $theValue ?? '');
 
   switch ($theType) {
     case "text":
@@ -64,25 +65,25 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-if ((isset($_POST["form_action"])) && ($_POST["form_action"] == "ins")) {
+if (isset($_POST["form_action"]) && $_POST["form_action"] === "ins") {
 
-  $date = strftime('%Y-%m-%d %H:%M:%S');
+  $date = date('Y-m-d H:i:s');
   $v_dt = $_POST['date_trans'];
 
   $sql_id_info = "select (max(calculate_id)) nr from exchange_koke where perdoruesi = '". $user_info ."'";
-  $id_info = mysql_query($sql_id_info, $MySQL) or die(mysql_error());
-  $row_id_info = mysql_fetch_assoc($id_info);
-  $id_info_value = $row_id_info['nr'] + 1;
+  $id_info = mysqli_query($MySQL, $sql_id_info) or die(mysqli_error($MySQL));
+  $row_id_info = mysqli_fetch_assoc($id_info);
+  $id_info_value = ($row_id_info['nr'] ?? 0) + 1;
   $id_calc = $user_info .'TRN'. $id_info_value;
 
-  $sql_id_info = "select kodllogari from filiali where id = ". $_POST['id_llogfilial'];
-  $id_info = mysql_query($sql_id_info, $MySQL) or die(mysql_error());
-  $row_id_info = mysql_fetch_assoc($id_info);
-  $id_llogarie01 = $row_id_info['kodllogari'];
+  $sql_id_info = "select kodllogari from filiali where id = ". (int)$_POST['id_llogfilial'];
+  $id_info = mysqli_query($MySQL, $sql_id_info) or die(mysqli_error($MySQL));
+  $row_id_info = mysqli_fetch_assoc($id_info);
+  $id_llogarie01 = $row_id_info['kodllogari'] ?? '';
 
   $sql_id_info = "select kodllogari from filiali where id = ". $_POST['id_klienti'];
-  $id_info = mysql_query($sql_id_info, $MySQL) or die(mysql_error());
-  $row_id_info = mysql_fetch_assoc($id_info);
+  $id_info = mysqli_query($MySQL, $sql_id_info) or die(mysqli_error($MySQL));
+  $row_id_info = mysqli_fetch_assoc($id_info);
   $id_llogarie02 = $row_id_info['kodllogari'];
 
   $insertSQL = sprintf("INSERT INTO exchange_koke ( tipiveprimit, pershkrimi, id, calculate_id, id_trans, date_trans, id_llogfilial, id_monkreditim, id_klienti, perqindjekomisioni, vleftakomisionit, vleftapaguar, perdoruesi, datarregjistrimit)
@@ -100,7 +101,7 @@ if ((isset($_POST["form_action"])) && ($_POST["form_action"] == "ins")) {
                        GetSQLValueString($_POST['vleftapaguar'], "double"),
                        GetSQLValueString($user_info, "text"),
                        GetSQLValueString(substr($v_dt, 6, 4)."-".substr($v_dt, 3, 2)."-".substr($v_dt, 0, 2), "date"));
-  $Result1 = mysql_query($insertSQL, $MySQL) or die(mysql_error());
+  $Result1 = mysqli_query($MySQL, $insertSQL) or die(mysqli_error($MySQL));
 
   $insertSQL = sprintf("INSERT INTO exchange_detaje ( id_exchangekoke, id_mondebituar, vleftadebituar, vleftakredituar, kursi, kursi_txt, kursi1, kursi1_txt)
                                              VALUES ( %s, %s, %s, %s, %s, %s, %s, %s)",
@@ -112,7 +113,7 @@ if ((isset($_POST["form_action"])) && ($_POST["form_action"] == "ins")) {
                        GetSQLValueString($_POST['id_mondebituar']."/".$_POST['id_mondebituar'], "text"),
                        GetSQLValueString($_POST['rate_value'], "double"),
                        GetSQLValueString($_POST['id_mondebituar']."/".$_POST['id_mondebituar'], "text") );
-  $Result1 = mysql_query($insertSQL, $MySQL) or die(mysql_error());
+  $Result1 = mysqli_query($MySQL, $insertSQL) or die(mysqli_error($MySQL));
 
   // shtimi i rreshtave per transaksionet
   if ($_POST['vleftapaguar'] > 0) {
@@ -128,7 +129,7 @@ if ((isset($_POST["form_action"])) && ($_POST["form_action"] == "ins")) {
                            GetSQLValueString($_POST['rate_value'], "double"),
                            GetSQLValueString($user_info, "text"),
                            GetSQLValueString($date, "date") );
-      $Result1 = mysql_query($insertSQL, $MySQL) or die(mysql_error());
+      $Result1 = mysqli_query($MySQL, $insertSQL) or die(mysqli_error($MySQL));
    }
   if ($_POST['vleftapaguar'] > 0) {
 
@@ -143,7 +144,7 @@ if ((isset($_POST["form_action"])) && ($_POST["form_action"] == "ins")) {
                            GetSQLValueString($_POST['rate_value'], "double"),
                            GetSQLValueString($user_info, "text"),
                            GetSQLValueString($date, "date") );
-      $Result1 = mysql_query($insertSQL, $MySQL) or die(mysql_error());
+      $Result1 = mysqli_query($MySQL, $insertSQL) or die(mysqli_error($MySQL));
    }
 
 
@@ -152,12 +153,10 @@ if ((isset($_POST["form_action"])) && ($_POST["form_action"] == "ins")) {
   header(sprintf("Location: %s", $updateGoTo));
 }
 
-  $sql_id_info = "select opstatus from opencloseday ";
-  // $id_info     = mysql_query($sql_id_info, $MySQL) or die(mysql_error());
-  // $row_id_info = mysql_fetch_assoc($id_info);
-  $id_info = $MySQL->query($sql_id_info);
-  $row_id_info = $id_info->fetch_assoc();
-  $opstatus    = $row_id_info['opstatus'];
+  $sql_id_info = "select opstatus from opencloseday";
+  $id_info = mysqli_query($MySQL, $sql_id_info) or die(mysqli_error($MySQL));
+  $row_id_info = mysqli_fetch_assoc($id_info);
+  $opstatus    = $row_id_info['opstatus'] ?? '';
 
   if ($opstatus == "C") {
 
@@ -167,46 +166,41 @@ if ((isset($_POST["form_action"])) && ($_POST["form_action"] == "ins")) {
 
 //----------------------------------------------------------------------------------
 
+// Initialize SQL where clauses
 $v_wheresql = "";
-if ($_SESSION['Usertype'] == 2)  $v_wheresql = " where id = ". $_SESSION['Userfilial'] ." ";
-if ($_SESSION['Usertype'] == 3)  $v_wheresql = " where id = ". $_SESSION['Userfilial'] ." ";
-if ($_SESSION['Usertype'] == 2)  $v_wheresqls = " where id <> ". $_SESSION['Userfilial'] ." ";
-if ($_SESSION['Usertype'] == 3)  $v_wheresqls = " where id <> ". $_SESSION['Userfilial'] ." ";
-if ($_SESSION['Usertype'] == 2)  $v_wheresqle = " and id_llogfilial = ". $_SESSION['Userfilial'] ." ";
-if ($_SESSION['Usertype'] == 3)  $v_wheresqle = " and id_llogfilial = ". $_SESSION['Userfilial'] ." ";
+$v_wheresqls = "";
+$v_wheresqle = "";
 
-$query_filiali_info = "select * from filiali ". $v_wheresql ." order by id asc";
-// $filiali_info = mysql_query($query_filiali_info, $MySQL) or die(mysql_error());
-// $row_filiali_info = mysql_fetch_assoc($filiali_info);
-$filiali_info = $MySQL->query($query_filiali_info);
-$row_filiali_info = $filiali_info->fetch_assoc();
+// Set conditions based on user type
+if (($_SESSION['Usertype'] ?? '') === '3') {
+    $userFilial = (int)($_SESSION['Userfilial'] ?? 0);
+    $v_wheresql = " WHERE id = $userFilial";
+    $v_wheresqls = " WHERE id <> $userFilial";
+    $v_wheresqle = " AND id_llogfilial = $userFilial";
+}
+
+$query_filiali_info = "SELECT * FROM filiali" . $v_wheresql . " ORDER BY id ASC";
+$filiali_info = mysqli_query($MySQL, $query_filiali_info) or die(mysqli_error($MySQL));
+$row_filiali_info = mysqli_fetch_assoc($filiali_info);
 
 $temp_v_wheresqle_query_klienti_info = isset($v_wheresqle) ? $v_wheresqle : "";
 $query_klienti_info = "select * from filiali ". $temp_v_wheresqle_query_klienti_info ." order by id asc";
-// $klienti_info = mysql_query($query_klienti_info, $MySQL) or die(mysql_error());
-// $row_klienti_info = mysql_fetch_assoc($klienti_info);
-$klienti_info = $MySQL->query($query_klienti_info);
-$row_klienti_info = $klienti_info->fetch_assoc();
+$klienti_info = mysqli_query($MySQL, $query_klienti_info) or die(mysqli_error($MySQL));
+$row_klienti_info = mysqli_fetch_assoc($klienti_info);
 $query_monedha_info = "select * from monedha order by mon_vendi desc, id ";
-// $monedha_info = mysql_query($query_monedha_info, $MySQL) or die(mysql_error());
-// $row_monedha_info = mysql_fetch_assoc($monedha_info);
-$monedha_info = $MySQL->query($query_monedha_info);
-$row_monedha_info = $monedha_info->fetch_assoc();
+$monedha_info = mysqli_query($MySQL, $query_monedha_info) or die(mysqli_error($MySQL));
+$row_monedha_info = mysqli_fetch_assoc($monedha_info);
 //----------------------------------------------------------------------------------
 $temp_v_wheresqle = isset($v_wheresqle) ? $v_wheresqle : "";
 $sql_info = "select * from kursi_koka where id = (select max(id) from kursi_koka where 1=1 ". $temp_v_wheresqle .") ". $temp_v_wheresqle;
-// $id_kursi = mysql_query($sql_info, $MySQL) or die(mysql_error());
-// $row_id_kursi = mysql_fetch_assoc($id_kursi);
-$id_kursi = $MySQL->query($sql_info);
-$row_id_kursi = $id_kursi->fetch_assoc();
+$id_kursi = mysqli_query($MySQL, $sql_info) or die(mysqli_error($MySQL));
+$row_id_kursi = mysqli_fetch_assoc($id_kursi);
 $query_monkurs_info = " select kursi_detaje.*, monedha.monedha, monedha.id monid
                           from kursi_detaje, monedha
                          where master_id = ". $row_id_kursi['id'] ."
                            and kursi_detaje.monedha_id = monedha.id ";
-// $monkurs_info = mysql_query($query_monkurs_info, $MySQL) or die(mysql_error());
-// $row_monkurs_info = mysql_fetch_assoc($monkurs_info);
-$monkurs_info = $MySQL->query($query_monkurs_info);
-$row_monkurs_info = $monkurs_info->fetch_assoc();
+$monkurs_info = mysqli_query($MySQL, $query_monkurs_info) or die(mysqli_error($MySQL));
+$row_monkurs_info = mysqli_fetch_assoc($monkurs_info);
 //----------------------------------------------------------------------------------
 
 ?>
@@ -258,7 +252,7 @@ news = new Array();
     news[<?php echo $row_monkurs_info['monid']; ?>][1] = "<?php echo $row_monkurs_info['monedha']; ?>";
     news[<?php echo $row_monkurs_info['monid']; ?>][2] = "<?php echo ( $row_monkurs_info['kursiblerje'] + $row_monkurs_info['kursishitje'] ) / 2; ?>";
 <?php
-           $row_monkurs_info = $monkurs_info->fetch_assoc();
+           $row_monkurs_info = mysqli_fetch_assoc($monkurs_info);
       };
 
 mysqli_free_result($monkurs_info);
@@ -453,7 +447,7 @@ function closeWin() {
 ?>
            <option value="<?php echo $row_filiali_info['id']; ?>" <?php if ($row_filiali_info['id'] == $_SESSION['Userfilial']) { echo "selected"; } ?>><?php echo $row_filiali_info['filiali']; ?></option>
 <?php
-         $row_filiali_info = mysql_fetch_assoc($filiali_info);
+         $row_filiali_info = mysqli_fetch_assoc($filiali_info);
        }
     mysqli_free_result($filiali_info);
 ?>
@@ -465,7 +459,7 @@ function closeWin() {
 ?>
            <option value="<?php echo $row_klienti_info['id']; ?>" <?php if ($row_klienti_info['id'] <> $_SESSION['Userfilial']) { echo "selected"; } ?>><?php echo $row_klienti_info['filiali']; ?></option>
 <?php
-         $row_klienti_info = mysql_fetch_assoc($klienti_info);
+         $row_klienti_info = mysqli_fetch_assoc($klienti_info);
        }
     mysqli_free_result($klienti_info);
 ?>
@@ -491,7 +485,7 @@ function closeWin() {
 ?>
            <option value="<?php echo $row_monedha_info['id']; ?>"><?php echo $row_monedha_info['monedha']; ?> - <?php echo $row_monedha_info['pershkrimi']; ?></option>
 <?php
-         $row_monedha_info = mysql_fetch_assoc($monedha_info);
+         $row_monedha_info = mysqli_fetch_assoc($monedha_info);
        }
     mysqli_free_result($monedha_info);
 ?>

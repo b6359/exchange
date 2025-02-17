@@ -38,7 +38,7 @@ if (isset($_SESSION['uid'])) {
   <?php
   if (isset($_GET['action']) && ($_GET['action'] == "del")) {
     $sql_info = "DELETE FROM filiali WHERE id = " . $_GET['hid'];
-    $result = mysqli_query($MySQL, $sql_info) or die(mysql_error());
+    $result = mysqli_query($MySQL, $sql_info) or die(mysqli_error($MySQL));
   }
   ?>
 
@@ -210,7 +210,7 @@ if (isset($_SESSION['uid'])) {
                 <?php
 
                 $sql_info = "select * from filiali order by ID ASC";
-                $h_menu = mysqli_query($MySQL, $sql_info) or die(mysql_error());
+                $h_menu = mysqli_query($MySQL, $sql_info) or die(mysqli_error($MySQL));
                 $row_h_menu = $h_menu->fetch_assoc();
                 $totalRows_h_menu = $h_menu->num_rows;
 

@@ -194,7 +194,7 @@ if (isset($_SESSION['uid'])) {
               <?php
               //mysql_select_db($database_MySQL, $MySQL);
               $query_filiali_info = "select * from filiali where id = " . $v_branch_id;
-              $filiali_info = mysqli_query($MySQL, $query_filiali_info) or die(mysql_error());
+              $filiali_info = mysqli_query($MySQL, $query_filiali_info) or die(mysqli_error($MySQL));
               $row_filiali_info = $filiali_info->fetch_assoc();
 
               while ($row_filiali_info) {
@@ -264,7 +264,7 @@ if (isset($_SESSION['uid'])) {
                         and ed.id_mondebituar = m2.id
                    ";
 
-                $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysql_error());
+                $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysqli_error($MySQL));
                 $row_RepInfo = $RepInfoRS->fetch_assoc();
 
                 $rowno   = 0;
@@ -527,7 +527,7 @@ if (isset($_SESSION['uid'])) {
                         and ed.id_mondebituar = m2.id
                    ";
 
-                $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysql_error());
+                $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysqli_error($MySQL));
                 $row_RepInfo = $RepInfoRS->fetch_assoc();
 
                 $rowno   = 0;

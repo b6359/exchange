@@ -1,50 +1,65 @@
 <?php
+declare(strict_types=1);
 
 session_start();
 date_default_timezone_set('Europe/Tirane');
 
-// ** Logout the current user. **
+// Build logout URL with proper escaping
 $logoutAction = $_SERVER['PHP_SELF'] . "?doLogout=true";
-if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")) {
-  $logoutAction .= "&" . htmlentities($_SERVER['QUERY_STRING']);
+if (!empty($_SERVER['QUERY_STRING'])) {
+    $logoutAction .= "&" . htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES, 'UTF-8');
 }
 
-if ((isset($_GET['doLogout'])) && ($_GET['doLogout'] == "true")) {
-  // logout
-  $GLOBALS['uid']         = "";
-  $GLOBALS['Username']    = "";
-  $GLOBALS['full_name']   = "";
-  $GLOBALS['Usertrans']   = "";
-  $GLOBALS['Userfilial']  = "";
-  $GLOBALS['Usertype']    = "";
-  $_SESSION['uid']        = "";
-  $_SESSION['Username']   = "";
-  $_SESSION['full_name']  = "";
-  $_SESSION['Usertrans']  = "";
-  $_SESSION['Userfilial'] = "";
-  $_SESSION['Usertype']   = "";
+// Handle logout
+if (isset($_GET['doLogout']) && $_GET['doLogout'] === "true") {
+    // Clear both global and session variables
+    $sessionVars = [
+        'uid',
+        'Username',
+        'full_name',
+        'Usertrans',
+        'Userfilial',
+        'Usertype'
+    ];
 
-  $logoutGoTo = "index.php";
-  if ($logoutGoTo) {
-    header("Location: $logoutGoTo");
-    exit;
-  }
+    // Clear session and global variables
+    foreach ($sessionVars as $var) {
+        unset($GLOBALS[$var]);
+        unset($_SESSION[$var]);
+    }
+
+    // Redirect to login page
+    $logoutGoTo = "index.php";
+    if ($logoutGoTo) {
+        header("Location: $logoutGoTo", true, 302);
+        exit;
+    }
 }
 
 if (isset($_SESSION['uid'])) {
-
+    require_once('ConMySQL.php');
+    
+    // Handle client deletion with prepared statement
+    if (isset($_GET['action']) && $_GET['action'] === "del") {
+        $sql_info = "DELETE FROM klienti 
+                     WHERE id = ? 
+                     AND (SELECT COUNT(*) 
+                         FROM exchange_koke 
+                         WHERE exchange_koke.id_klienti = klienti.id) = 0";
+                         
+        $stmt = mysqli_prepare($MySQL, $sql_info);
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, 'i', $_GET['hid']);
+            
+            if (!mysqli_stmt_execute($stmt)) {
+                die('Error executing query: ' . mysqli_error($MySQL));
+            }
+            mysqli_stmt_close($stmt);
+        } else {
+            die('Error preparing statement: ' . mysqli_error($MySQL));
+        }
+    }
 ?>
-  <?php require_once('ConMySQL.php'); ?>
-  <?php
-  if (isset($_GET['action']) && ($_GET['action'] == "del")) {
-    $sql_info = "DELETE FROM klienti 
-      WHERE id = " . $_GET['hid'] . "
-      AND (SELECT COUNT(*) FROM exchange_koke WHERE exchange_koke.id_klienti = klienti.id) = 0";
-    $result = mysqli_query($MySQL, $sql_info) or die(mysql_error());
-  }
-  ?>
-
-
   <!-- --------------------------------------- -->
   <!--          Aplikacioni xChange            -->
   <!--                                         -->
@@ -231,7 +246,7 @@ if (isset($_SESSION['uid'])) {
                   $sql = "SELECT count(id) FROM klienti " . $where;
                   $retval = mysqli_query($MySQL, $sql);
                   if (! $retval) {
-                    die('Could not get data: ' . mysql_error());
+                    die('Could not get data: ' . mysqli_error($MySQL));
                   }
                   $row = mysqli_fetch_array($retval, MYSQLI_NUM);
                   $rec_count = $row[0];
@@ -250,7 +265,7 @@ if (isset($_SESSION['uid'])) {
                     $where .
                     " order by emri, mbiemri " .
                     "LIMIT $offset, $rec_limit";
-                  $h_menu = mysqli_query($MySQL, $sql_info) or die(mysql_error());
+                  $h_menu = mysqli_query($MySQL, $sql_info) or die(mysqli_error($MySQL));
                   $row_h_menu = $h_menu->fetch_assoc();
                   $totalRows_h_menu = $h_menu->num_rows;
 
@@ -338,7 +353,7 @@ if (isset($_SESSION['uid'])) {
 
   </html>
 <?php
-};
+}
 ?>
 
 <script>

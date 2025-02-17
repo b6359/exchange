@@ -204,7 +204,7 @@ if (isset($_SESSION['uid'])) {
                                 <?php
                                 //mysql_select_db($database_MySQL, $MySQL);
                                 $query_filiali_info = "select * from filiali order by filiali asc";
-                                $filiali_info = mysqli_query($MySQL, $query_filiali_info) or die(mysql_error());
+                                $filiali_info = mysqli_query($MySQL, $query_filiali_info) or die(mysqli_error($MySQL));
                                 $row_filiali_info = $filiali_info->fetch_assoc();
 
                                 while ($row_filiali_info) {

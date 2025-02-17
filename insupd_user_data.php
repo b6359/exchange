@@ -18,12 +18,13 @@ if (isset($_SESSION['uid'])) {
 
   if (isset($_GET['action']) && ($_GET['action'] == "upd")) {
     if (isset($_GET['hid'])) {
-      $colname_menu_info = (get_magic_quotes_gpc()) ? $_GET['hid'] : addslashes($_GET['hid']);
-      mysql_select_db($database_MySQL, $MySQL);
+      $user_info =  $_SESSION['Username'] ?? addslashes($_SESSION['Username']);
+      $colname_menu_info = $user_info ? addslashes($_GET['hid']) : $_GET['hid'];
+      mysqli_select_db($MySQL, $database_MySQL);
       $query_menu_info = sprintf("SELECT * FROM app_user WHERE id = %s", $colname_menu_info);
-      $menu_info = mysql_query($query_menu_info, $MySQL) or die(mysql_error());
-      $row_menu_info = mysql_fetch_assoc($menu_info);
-      $totalRows_menu_info = mysql_num_rows($menu_info);
+      $menu_info = mysqli_query($MySQL, $query_menu_info) or die(mysqli_error($MySQL));
+      $row_menu_info = $menu_info->fetch_assoc();
+      $totalRows_menu_info = $menu_info->num_rows;
 
       $id          = $row_menu_info['id'];
       $username    = $row_menu_info['username'];
@@ -70,7 +71,7 @@ if (isset($_SESSION['uid'])) {
   /////////////////////////////////////////////////////////////////////////////////////////////////
   function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "")
   {
-    $theValue = (!get_magic_quotes_gpc()) ? addslashes($theValue) : $theValue;
+    $theValue = addslashes($theValue) ?? $theValue;
 
     switch ($theType) {
       case "text":
@@ -107,8 +108,8 @@ if (isset($_SESSION['uid'])) {
       GetSQLValueString($_POST['id'], "int")
     );
 
-    mysql_select_db($database_MySQL, $MySQL);
-    $Result1 = mysql_query($updateSQL, $MySQL) or die(mysql_error());
+    mysqli_select_db($MySQL, $database_MySQL);
+    $Result1 = mysqli_query($MySQL, $updateSQL) or die(mysqli_error($MySQL));
 
     $updateGoTo = "exchange_users.php";
     header(sprintf("Location: %s", $updateGoTo));
@@ -128,8 +129,8 @@ if (isset($_SESSION['uid'])) {
       GetSQLValueString($_POST['status'], "text")
     );
 
-    mysql_select_db($database_MySQL, $MySQL);
-    $Result1 = mysql_query($insertSQL, $MySQL) or die(mysql_error());
+    mysqli_select_db($MySQL, $database_MySQL);
+    $Result1 = mysqli_query($MySQL, $insertSQL) or die(mysqli_error($MySQL));
 
     $updateGoTo = "exchange_users.php";
     header(sprintf("Location: %s", $updateGoTo));
@@ -289,7 +290,7 @@ if (isset($_SESSION['uid'])) {
             <DIV class=ctxheading1>
 
               <form enctype="multipart/form-data" ACTION="insupd_user_data.php" METHOD="POST" name="formmenu" onsubmit="return checkform(this);">
-                <input name="form_action" type="hidden" value="<?php echo $_GET[action]; ?>">
+                <input name="form_action" type="hidden" value="<?php echo $_GET['action']; ?>">
                 <input name="id" type="hidden" value="<?php echo $id; ?>">
                 <table width="600px" border="0" cellpadding="0" cellspacing="5">
                   <tr>
@@ -317,12 +318,12 @@ if (isset($_SESSION['uid'])) {
                     <td align="left"><select name="id_filiali">
                         <?php
                         $sql_info = "select * from filiali where tstatus='T' order by filiali desc";
-                        $h_menu = mysql_query($sql_info, $MySQL) or die(mysql_error());
-                        $row_h_menu = mysql_fetch_assoc($h_menu);
+                        $h_menu = mysqli_query($MySQL, $sql_info) or die(mysqli_error($MySQL));
+                        $row_h_menu = $h_menu->fetch_assoc();
 
                         while ($row_h_menu) { ?>
                           <option value="<?php echo $row_h_menu['id']; ?>" <?php if ($row_h_menu['id'] == $id_filiali) echo "selected='selected'"; ?>><?php echo $row_h_menu['filiali']; ?></option>
-                        <?php $row_h_menu = mysql_fetch_assoc($h_menu);
+                        <?php $row_h_menu = $h_menu->fetch_assoc();
                         };
                         mysqli_free_result($h_menu);
                         ?>
@@ -333,12 +334,12 @@ if (isset($_SESSION['uid'])) {
                     <td align="left"><select name="id_usertype">
                         <?php
                         $sql_info = "select * from usertype  where tstatus='T' order by id";
-                        $h_menu = mysql_query($sql_info, $MySQL) or die(mysql_error());
-                        $row_h_menu = mysql_fetch_assoc($h_menu);
+                        $h_menu = mysqli_query($MySQL, $sql_info) or die(mysqli_error($MySQL));
+                        $row_h_menu = $h_menu->fetch_assoc();
 
                         while ($row_h_menu) { ?>
                           <option value="<?php echo $row_h_menu['id']; ?>" <?php if ($row_h_menu['id'] == $id_usertype) echo "selected='selected'"; ?>><?php echo $row_h_menu['description']; ?></option>
-                        <?php $row_h_menu = mysql_fetch_assoc($h_menu);
+                        <?php $row_h_menu = $h_menu->fetch_assoc();
                         };
                         mysqli_free_result($h_menu);
                         ?>

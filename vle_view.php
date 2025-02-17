@@ -15,7 +15,9 @@ if (isset($_SESSION['uid'])) {
   if ((isset($_POST['p_vlera2'])) && ($_POST['p_vlera2'] != "")) {
     $v_whereval .= " and vleftapaguar <= " . $_POST['p_vlera2'];
   }
-
+  $v_perioddate = "";
+  $v_perioddate2 = "";
+  $v_view_dt = "";
   $v_begindate = "";
   if ((isset($_POST['p_date1'])) && ($_POST['p_date1'] != "")) {
 
@@ -211,7 +213,7 @@ if (isset($_SESSION['uid'])) {
               <?php
               //mysql_select_db($database_MySQL, $MySQL);
               $query_filiali_info = "select * from klienti where " . $v_klient_id3;
-              $filiali_info = mysqli_query($MySQL, $query_filiali_info) or die(mysql_error());
+              $filiali_info = mysqli_query($MySQL, $query_filiali_info) or die(mysqli_error($MySQL));
               $row_filiali_info = $filiali_info->fetch_assoc();
               while ($row_filiali_info) {
               ?>
@@ -277,7 +279,7 @@ if (isset($_SESSION['uid'])) {
                    order by ek.unique_id desc
                    ";
 
-                $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysql_error());
+                $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysqli_error($MySQL));
                 $row_RepInfo = $RepInfoRS->fetch_assoc();
                 $rowno       = 0;
 
@@ -349,7 +351,7 @@ if (isset($_SESSION['uid'])) {
                                      " . $v_whereval    . "
                                 GROUP BY hyrjedalje.date_trans, hyrjedalje.perdoruesi, hyrjedalje.id_klienti, klienti.emri, klienti.mbiemri, hyrjedalje.id_monedhe, monedha.monedha
                                 ORDER BY hyrjedalje.date_trans, hyrjedalje.perdoruesi, klienti.emri, klienti.mbiemri, hyrjedalje.id_monedhe ";
-                $gjendje_info     = mysqli_query($MySQL, $query_gjendje_info) or die(mysql_error());
+                $gjendje_info     = mysqli_query($MySQL, $query_gjendje_info) or die(mysqli_error($MySQL));
                 $row_gjendje_info = $gjendje_info->fetch_assoc();
                 $rowno2           = 0;
 

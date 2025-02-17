@@ -11,11 +11,11 @@ if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")) {
 
 if ((isset($_GET['doLogout'])) && ($_GET['doLogout'] == "true")) {
   // logout
-  session_unregister('Usertrans');
-  session_unregister('Userfilial');
-  session_unregister('Username');
-  session_unregister('full_name');
-  session_unregister('uid');
+  unset($_SESSION['Usertrans']);
+  unset($_SESSION['Userfilial']);
+  unset($_SESSION['Username']);
+  unset($_SESSION['full_name']);
+  unset($_SESSION['uid']);
 
   $logoutGoTo = "index.php";
   if ($logoutGoTo) {
@@ -48,7 +48,7 @@ if (isset($_SESSION['uid'])) {
 
   $query_filiali_info = "select * from filiali " . $v_wheresql   . " order by filiali asc";
 
-  $filiali_info = $MySQL->query($query_filiali_info) or die(mysql_error());
+  $filiali_info = $MySQL->query($query_filiali_info) or die(mysqli_error($MySQL));
   $row_filiali_info = $filiali_info->fetch_assoc();
 ?>
 
@@ -203,7 +203,7 @@ if (isset($_SESSION['uid'])) {
                   <?php
                   $temp_v_wheresqls = isset($v_wheresqls) ? $v_wheresqls : "";
                   $sql_info = "select k.*, (select f.filiali from filiali as f where f.id = k. id_llogfilial) as filiali from kursi_koka as k where id = (select max(id) from kursi_koka where 1=1 " . $temp_v_wheresqls . ") " . $temp_v_wheresqls;
-                  $h_menu = $MySQL->query($sql_info) or die(mysql_error());
+                  $h_menu = $MySQL->query($sql_info) or die(mysqli_error($MySQL));
                   $row_h_menu = $h_menu->fetch_assoc();
                   $totalRows_h_menu = $h_menu->num_rows;
 
@@ -230,7 +230,7 @@ if (isset($_SESSION['uid'])) {
                     <?php
                     //mysql_select_db($database_MySQL, $MySQL);
                     $data_sql_info = "select kursi_detaje.*, monedha.monedha from kursi_detaje, monedha where master_id = " . $row_h_menu['id'] . " and kursi_detaje.monedha_id = monedha.id order by monedha.taborder ";
-                    $h_data = $MySQL->query($data_sql_info) or die(mysql_error());
+                    $h_data = $MySQL->query($data_sql_info) or die(mysqli_error($MySQL));
                     $row_h_data = $h_data->fetch_assoc();
 
                     while ($row_h_data) { ?>

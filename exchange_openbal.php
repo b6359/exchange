@@ -47,8 +47,8 @@ if ((isset($_SESSION['uid']))&&($_SESSION['Usertype'] != 3)) {
 ?>
 <?php
     if (isset($_GET['action']) && ($_GET['action'] == "del")) {
-        $sql_info = "DELETE FROM openbalance WHERE id = ". $_GET[hid];
-        $result = mysqli_query($MySQL,$sql_info) or die(mysql_error());
+        $sql_info = "DELETE FROM openbalance WHERE id = ". $_GET['hid'];
+        $result = mysqli_query($MySQL,$sql_info) or die(mysqli_error($MySQL));
     }
 ?>
 
@@ -242,8 +242,8 @@ function closeWin() {
                                    AND openbalance.date_trans    = '". substr($v_dt, 6, 4)."-".substr($v_dt, 3, 2)."-".substr($v_dt, 0, 2) ."'
                                     ". $v_wheresql ."
                               ORDER BY filiali.filiali, openbalance.monedha_id ";
-        $gjendje_info     = mysqli_query($MySQL,$query_gjendje_info) or die(mysql_error());
-        $row_gjendje_info = $gjendje_info->fetch_assoc();
+        $gjendje_info     = mysqli_query($MySQL,$query_gjendje_info) or die(mysqli_error($MySQL));
+        $row_gjendje_info = mysqli_fetch_assoc($gjendje_info);
 
   while ($row_gjendje_info) {
 ?>
@@ -257,7 +257,7 @@ function closeWin() {
     <td width="20"><a title="Modifiko Informacionin" href="insupd_openbal_data.php?action=upd&hid=<?php echo $row_gjendje_info['id']; ?>"><img src="images/edit.gif" border="0"></a></td>
     <td width="20"><a title="Fshij Informacionin" href="JavaScript: do_delete(<?php echo $row_gjendje_info['id']; ?>); "><img src="images/del.gif" border="0"></a></td>
   </tr>
-<?php      $row_gjendje_info = $gjendje_info->fetch_assoc();
+<?php      $row_gjendje_info = mysqli_fetch_assoc($gjendje_info);
        }
     mysqli_free_result($gjendje_info);
 // ---------------------------------------------------------------------------------

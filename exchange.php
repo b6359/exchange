@@ -75,12 +75,12 @@ if (isset($_SESSION['uid'])) {
             GetSQLValueString($_POST['internid'], "text"),
             GetSQLValueString($user_info, "text")
         );
-        $Result1 = mysql_query($insertSQL, $MySQL) or die(mysql_error());
+        $Result1 = $MySQL->query($insertSQL) or die(mysqli_error($MySQL));
 
         $id_inscheck = 0;
         $sql_id_info = "select count(*) as nr from exchange_ins where changeinsid = '" . $_POST['internid'] . "' and userinsid = '" . $user_info . "' ";
-        $id_info = mysql_query($sql_id_info, $MySQL) or die(mysql_error());
-        $row_id_info = mysql_fetch_assoc($id_info);
+        $id_info = $MySQL->query($sql_id_info) or die(mysqli_error($MySQL));
+        $row_id_info = $id_info->fetch_assoc();
         $id_inscheck = $row_id_info['nr'];
 
         if ($id_inscheck == 1) {
@@ -89,19 +89,19 @@ if (isset($_SESSION['uid'])) {
             $v_dt = $_POST['date_trans'];
 
             $sql_id_info = "select (max(calculate_id)) nr from exchange_koke where perdoruesi = '" . $user_info . "'";
-            $id_info = mysql_query($sql_id_info, $MySQL) or die(mysql_error());
-            $row_id_info = mysql_fetch_assoc($id_info);
+            $id_info = $MySQL->query($sql_id_info) or die(mysqli_error($MySQL));
+            $row_id_info = $id_info->fetch_assoc();
             $id_info_value = $row_id_info['nr'] + 1;
             $id_calc = $user_info . 'CHN' . $id_info_value;
 
             $sql_id_info = "select kodi from llogarite where chnvl = 'T'";
-            $id_info = mysql_query($sql_id_info, $MySQL) or die(mysql_error());
-            $row_id_info = mysql_fetch_assoc($id_info);
+            $id_info = $MySQL->query($sql_id_info) or die(mysqli_error($MySQL));
+            $row_id_info = $id_info->fetch_assoc();
             $id_llogarie = $row_id_info['kodi'];
 
             $sql_id_info = "select kodi from llogarite where chnco = 'T'";
-            $id_info = mysql_query($sql_id_info, $MySQL) or die(mysql_error());
-            $row_id_info = mysql_fetch_assoc($id_info);
+            $id_info = $MySQL->query($sql_id_info) or die(mysqli_error($MySQL));
+            $row_id_info = $id_info->fetch_assoc();
             $id_komisioni = $row_id_info['kodi'];
 
             $insertSQL = sprintf(
@@ -122,7 +122,7 @@ if (isset($_SESSION['uid'])) {
                 GetSQLValueString($user_info, "text"),
                 GetSQLValueString(substr($v_dt, 6, 4) . "-" . substr($v_dt, 3, 2) . "-" . substr($v_dt, 0, 2), "date")
             );
-            $Result1 = mysql_query($insertSQL, $MySQL) or die(mysql_error());
+            $Result1 = $MySQL->query($insertSQL) or die(mysqli_error($MySQL));
 
             if ($_POST['menyrepagese'] == "CASH") {
                 $insertSQL = sprintf(
@@ -137,7 +137,7 @@ if (isset($_SESSION['uid'])) {
                     GetSQLValueString($_POST['kursi1'], "double"),
                     GetSQLValueString($_POST['kursi1_txt'], "text")
                 );
-                $Result1 = mysql_query($insertSQL, $MySQL) or die(mysql_error());
+                $Result1 = $MySQL->query($insertSQL) or die(mysqli_error($MySQL));
             } else {
                 $insertSQL = sprintf(
                     "INSERT INTO exchange_detaje ( id_exchangekoke, id_mondebituar, vleftadebituar, vleftadebituarjocash, vleftakredituar, kursi, kursi_txt, kursi1, kursi1_txt) 
@@ -151,7 +151,7 @@ if (isset($_SESSION['uid'])) {
                     GetSQLValueString($_POST['kursi1'], "double"),
                     GetSQLValueString($_POST['kursi1_txt'], "text")
                 );
-                $Result1 = mysql_query($insertSQL, $MySQL) or die(mysql_error());
+                $Result1 = $MySQL->query($insertSQL) or die(mysqli_error($MySQL));
             }
 
             // shtimi i rreshtave per transaksionet
@@ -170,7 +170,7 @@ if (isset($_SESSION['uid'])) {
                     GetSQLValueString($user_info, "text"),
                     GetSQLValueString($date, "date")
                 );
-                $Result1 = mysql_query($insertSQL, $MySQL) or die(mysql_error());
+                $Result1 = $MySQL->query($insertSQL) or die(mysqli_error($MySQL));
             }
             if ($_POST['vleftakredituar'] > 0) {
                 $insertSQL = sprintf(
@@ -187,7 +187,7 @@ if (isset($_SESSION['uid'])) {
                     GetSQLValueString($user_info, "text"),
                     GetSQLValueString($date, "date")
                 );
-                $Result1 = mysql_query($insertSQL, $MySQL) or die(mysql_error());
+                $Result1 = $MySQL->query($insertSQL) or die(mysqli_error($MySQL));
             }
             if ($_POST['vleftakomisionit'] > 0) {
                 $insertSQL = sprintf(
@@ -204,7 +204,7 @@ if (isset($_SESSION['uid'])) {
                     GetSQLValueString($user_info, "text"),
                     GetSQLValueString($date, "date")
                 );
-                $Result1 = mysql_query($insertSQL, $MySQL) or die(mysql_error());
+                $Result1 = $MySQL->query($insertSQL) or die(mysqli_error($MySQL));
 
                 $insertSQL = sprintf(
                     "INSERT INTO tblalltransactions ( id_veprimi, date_trans, tipiveprimit, pershkrimi, id_filiali, id_llogari, id_monedhe, id_klienti, vleradebituar, vlerakredituar, kursi, perdoruesi, datarregjistrimit )
@@ -220,13 +220,13 @@ if (isset($_SESSION['uid'])) {
                     GetSQLValueString($user_info, "text"),
                     GetSQLValueString($date, "date")
                 );
-                $Result1 = mysql_query($insertSQL, $MySQL) or die(mysql_error());
+                $Result1 = $MySQL->query($insertSQL) or die(mysqli_error($MySQL));
             }
         }
 
         $sql_id_info = "select (max(calculate_id)) nr from exchange_koke where perdoruesi = '" . $user_info . "'";
-        $id_info = mysql_query($sql_id_info, $MySQL) or die(mysql_error());
-        $row_id_info = mysql_fetch_assoc($id_info);
+        $id_info = $MySQL->query($sql_id_info) or die(mysqli_error($MySQL));
+        $row_id_info = $id_info->fetch_assoc();
         $id_info_value = $row_id_info['nr'];
 
         $updateGoTo = "exchange_print.php?hid=" . $id_info_value;
@@ -282,13 +282,24 @@ if (isset($_SESSION['uid'])) {
     // $row_monedha_info = mysql_fetch_assoc($monedha_info);
 
     //----------------------------------------------------------------------------------
-    $temp_v_wheresqls = isset($v_wheresql) ? $v_wheresql : "";
-    $sql_info = "select * from kursi_koka where id = (select max(id) from kursi_koka where 1=1 " . $temp_v_wheresqls . ") " . $temp_v_wheresqls;
+    $temp_v_wheresqls = $v_wheresqls ?? '';
+    $sql_info = "SELECT * FROM kursi_koka WHERE id = (SELECT MAX(id) FROM kursi_koka WHERE 1=1 " . $temp_v_wheresqls . ") " . $temp_v_wheresqls;
     $id_kursi = $MySQL->query($sql_info);
-    //var_dump($id_kursi);
-    $row_id_kursi = $id_kursi->fetch_assoc();
-    //$id_kursi = mysql_query($sql_info, $MySQL) or die(mysql_error());
-    //$row_id_kursi = mysql_fetch_assoc($id_kursi);
+
+    if ($id_kursi === false) {
+        // Handle query error
+        die('Query Error: ' . $MySQL->error);
+    }
+
+    // Check if we got results
+    if ($id_kursi->num_rows > 0) {
+        $row_id_kursi = $id_kursi->fetch_assoc();
+    } else {
+        // Handle no results case
+        $row_id_kursi = null;
+        // Or set default values if needed:
+        // $row_id_kursi = ['default_key' => 'default_value'];
+    }
 
     $query_monkurs_info = " select kursi_detaje.*, monedha.monedha, monedha.id monid
                           from kursi_detaje, monedha
@@ -785,7 +796,7 @@ if (isset($_SESSION['uid'])) {
                                                             } ?>>
                                                             <?php echo $row_filiali_info['filiali']; ?></option>
                                                     <?php
-                                                        $row_filiali_info = mysql_fetch_assoc($filiali_info);
+                                                        $row_filiali_info = $filiali_info->fetch_assoc();
                                                     }
                                                     mysqli_free_result($filiali_info);
                                                     ?>
@@ -805,7 +816,7 @@ if (isset($_SESSION['uid'])) {
                                                             } ?>>
                                                             <?php echo $row_klienti_info['emriplote']; ?></option>
                                                     <?php
-                                                        $row_klienti_info = mysql_fetch_assoc($klienti_info);
+                                                        $row_klienti_info = $klienti_info->fetch_assoc();
                                                     }
                                                     mysqli_free_result($klienti_info);
                                                     ?>
@@ -847,7 +858,7 @@ if (isset($_SESSION['uid'])) {
                                                                 <?php echo $row_monedha_info['pershkrimi']; ?></option>
                                                     <?php
                                                         }
-                                                        $row_monedha_info = mysql_fetch_assoc($monedha_info);
+                                                        $row_monedha_info = $monedha_info->fetch_assoc();
                                                     }
                                                     mysqli_free_result($monedha_info);
                                                     ?>
@@ -883,8 +894,8 @@ if (isset($_SESSION['uid'])) {
                                                     <option value="999"></option>
                                                     <?php
 
-                                                    $monedha_info = mysql_query($query_monedha_info, $MySQL) or die(mysql_error());
-                                                    $row_monedha_info = mysql_fetch_assoc($monedha_info);
+                                                    $monedha_info = $MySQL->query($query_monedha_info) or die(mysqli_error($MySQL));
+                                                    $row_monedha_info = $monedha_info->fetch_assoc();
 
                                                     while ($row_monedha_info) {
 
@@ -900,7 +911,7 @@ if (isset($_SESSION['uid'])) {
                                                                 <?php echo $row_monedha_info['pershkrimi']; ?></option>
                                                     <?php
                                                         }
-                                                        $row_monedha_info = mysql_fetch_assoc($monedha_info);
+                                                        $row_monedha_info = $monedha_info->fetch_assoc();
                                                     }
                                                     mysqli_free_result($monedha_info);
                                                     ?>

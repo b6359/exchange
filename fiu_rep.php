@@ -337,7 +337,7 @@ if (isset($_SESSION['uid'])) {
                                     and (m11.monedha = 'LEK' or m21.monedha = 'LEK')
                                ";
 
-      $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysql_error());
+      $RepInfoRS   = $MySQL->query($RepInfo_sql) or die(mysqli_error($MySQL));
       $row_RepInfo = $RepInfoRS->fetch_assoc();
 
       if ($v_reptype == "XML") {

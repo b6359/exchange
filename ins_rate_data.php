@@ -11,11 +11,11 @@ if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")) {
 
 if ((isset($_GET['doLogout'])) && ($_GET['doLogout'] == "true")) {
   // logout
-  session_unregister('Usertrans');
-  session_unregister('Userfilial');
-  session_unregister('Username');
-  session_unregister('full_name');
-  session_unregister('uid');
+  unset($_SESSION["Usertrans"]);
+  unset($_SESSION["Userfilial"]);
+  unset($_SESSION["Username"]);
+  unset($_SESSION["full_name"]);
+  unset($_SESSION["uid"]);
 
   $logoutGoTo = "index.php";
   if ($logoutGoTo) {
@@ -75,7 +75,7 @@ if (isset($_SESSION['uid'])) {
   }
 
   $query_filiali_info = "select * from filiali " . $v_wheresql   . " order by filiali asc";
-  $filiali_info = $MySQL->query($query_filiali_info) or die(mysql_error());
+  $filiali_info = $MySQL->query($query_filiali_info) or die(mysqli_error($MySQL));
   $row_filiali_info =  $filiali_info->fetch_assoc();
 
   //----------------------------------------------------------------------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ if (isset($_SESSION['uid'])) {
     $v_insert = 1;
     //----------------------------------------------------------------------------------------------------------------------------------------------
     $mon_sql_info = "select monedha.id, monedha.monedha from monedha where mon_vendi = 'J'";
-    $mon_data = $MySQL->query($mon_sql_info) or die(mysql_error());
+    $mon_data = $MySQL->query($mon_sql_info) or die(mysqli_error($MySQL));
     $row_mon_data = $mon_data->fetch_assoc();
 
     while ($row_mon_data) {
@@ -106,7 +106,7 @@ if (isset($_SESSION['uid'])) {
 
       //----------------------------------------------------------------------------------------------------------------------------------------------
       $sql_info = sprintf("select max(fraksion) frak_nr from kursi_koka where date = %s", GetSQLValueString($_POST['date'], "date"));
-      $id_fraksion = $MySQL->query($sql_info) or die(mysql_error());
+      $id_fraksion = $MySQL->query($sql_info) or die(mysqli_error($MySQL));
       $row_id_fraksion = $id_fraksion->fetch_assoc();
       $frak_no = $row_id_fraksion['frak_nr'] + 1;
       mysqli_free_result($id_fraksion);
@@ -128,13 +128,13 @@ if (isset($_SESSION['uid'])) {
       }
       //----------------------------------------------------------------------------------------------------------------------------------------------
       $sql_info = "select max(id) id_trans from kursi_koka";
-      $id_trans = $MySQL->query($sql_info) or die(mysql_error());
+      $id_trans = $MySQL->query($sql_info) or die(mysqli_error($MySQL));
       $row_id_trans = $id_trans->fetch_assoc();
       $trans_no = $row_id_trans['id_trans'];
       mysqli_free_result($id_trans);
       //----------------------------------------------------------------------------------------------------------------------------------------------
       $mon_sql_info = "select monedha.id, monedha.monedha from monedha where mon_vendi = 'J'";
-      $mon_data = $MySQL->query($mon_sql_info) or die(mysql_error());
+      $mon_data = $MySQL->query($mon_sql_info) or die(mysqli_error($MySQL));
       $row_mon_data = $mon_data->fetch_assoc();
 
       while ($row_mon_data) {
@@ -165,7 +165,7 @@ if (isset($_SESSION['uid'])) {
       mysqli_free_result($mon_data);
       //----------------------------------------------------------------------------------------------------------------------------------------------
       $mon_sql_info = "select monedha.id, monedha.monedha from monedha where mon_vendi = 'J' and monedha like 'EUR%'";
-      $mon_data = $MySQL->query($mon_sql_info) or die(mysql_error());
+      $mon_data = $MySQL->query($mon_sql_info) or die(mysqli_error($MySQL));
       $row_mon_data = $mon_data->fetch_assoc();
 
       while ($row_mon_data) {
@@ -379,17 +379,17 @@ if (isset($_SESSION['uid'])) {
                     <?php
                     $temp_v_wheresqls = isset($v_wheresqls) ? $v_wheresqls : "";
                     $sql_info   = "select * from kursi_koka where id = (select max(id) from kursi_koka where 1=1 " . $temp_v_wheresqls . ") " . $temp_v_wheresqls;
-                    $h_menu     = $MySQL->query($sql_info) or die(mysql_error());
+                    $h_menu     = $MySQL->query($sql_info) or die(mysqli_error($MySQL));
                     $row_h_menu =  $h_menu->fetch_assoc();
 
                     $data_sql_info = "select monedha.monedha from monedha where mon_vendi = 'J' order by taborder";
-                    $h_data        = $MySQL->query($data_sql_info) or die(mysql_error());
+                    $h_data        = $MySQL->query($data_sql_info) or die(mysqli_error($MySQL));
                     $row_h_data    =  $h_data->fetch_assoc();
 
                     while ($row_h_data) {
 
                       $data2_sql_info = "select kursi_detaje.*, monedha.monedha from kursi_detaje, monedha where master_id = " . $row_h_menu['id'] . " and kursi_detaje.monedha_id = monedha.id and monedha.monedha = '" . $row_h_data['monedha'] . "' ";
-                      $h_data2        =  $MySQL->query($data2_sql_info) or die(mysql_error());
+                      $h_data2        =  $MySQL->query($data2_sql_info) or die(mysqli_error($MySQL));
                       $row_h_data2    =  $h_data2->fetch_assoc();
 
                     ?>

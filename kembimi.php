@@ -1,3 +1,4 @@
+<?php require_once('ConMySQL.php'); ?>
 <?php
 
 set_time_limit(0);
@@ -8,6 +9,8 @@ set_time_limit(0);
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Periudha e Veprimit
+$v_dt1  = strftime('%d.%m.%Y');
+$v_dt2  = strftime('%d.%m.%Y');
 $startdt = substr($v_dt1, 0, 2) . "/" . substr($v_dt1, 3, 2) . "/" . substr($v_dt1, 6, 4);
 $startrp = $v_dt1;
 
@@ -23,13 +26,13 @@ $objPHPexcel   = PHPExcel_IOFactory::load('doc/Kembimi.xlsx');
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // BEGIN CALCULATION
 
-mysql_select_db($database_MySQL, $MySQL);
+mysqli_select_db($MySQL, $database_MySQL);
 $RepInfoM_sql = " select monedha
                           from monedha
                          where monedha <> 'LEK'
                       order by id ";
-$RepInfoMRS   = mysql_query($RepInfoM_sql, $MySQL) or die(mysql_error());
-$row_RepInfoM = mysql_fetch_assoc($RepInfoMRS);
+$RepInfoMRS   = mysqli_query($MySQL, $RepInfoM_sql) or die(mysqli_error($MySQL));
+$row_RepInfoM = $RepInfoMRS->fetch_assoc();
 
 while ($row_RepInfoM) {
 
@@ -46,7 +49,7 @@ while ($row_RepInfoM) {
   $v_perioddate = " and ek.date_trans < '" . substr($v_dt1, 6, 4) . "-" . substr($v_dt1, 3, 2) . "-" . substr($v_dt1, 0, 2) . "' ";
 
   // Blerje
-  mysql_select_db($database_MySQL, $MySQL);
+  mysqli_select_db($MySQL, $database_MySQL);
   $RepInfo_sql = " select (sum(ek.vleftapaguar) / sum(ed.vleftadebituar)) kursi, sum(ed.vleftadebituar) vleftadebituar
                                from exchange_koke as ek,
                                     exchange_detaje as ed,
@@ -64,20 +67,20 @@ while ($row_RepInfoM) {
                                 " . $v_perioddate . "
                            group by m1.monedha, m2.monedha ";
 
-  $RepInfoRS   = mysql_query($RepInfo_sql, $MySQL) or die(mysql_error());
-  $row_RepInfo = mysql_fetch_assoc($RepInfoRS);
+  $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysqli_error($MySQL));
+  $row_RepInfo = $RepInfoRS->fetch_assoc();
 
   while ($row_RepInfo) {
 
     $v_omon_b  = $row_RepInfo['vleftadebituar'];
     $v_omon_rb = $row_RepInfo['kursi'];
 
-    $row_RepInfo = mysql_fetch_assoc($RepInfoRS);
+    $row_RepInfo = $RepInfoRS->fetch_assoc();
   };
   mysqli_free_result($RepInfoRS);
 
   // Shitje
-  mysql_select_db($database_MySQL, $MySQL);
+  mysqli_select_db($MySQL, $database_MySQL);
   $RepInfo_sql = " select sum(ek.vleftapaguar) vleftapaguar, (sum(ed.vleftadebituar) / sum(ek.vleftapaguar)) kursi
                                from exchange_koke as ek,
                                     exchange_detaje as ed,
@@ -95,15 +98,15 @@ while ($row_RepInfoM) {
                                 " . $v_perioddate . "
                            group by m1.monedha, m2.monedha ";
 
-  $RepInfoRS   = mysql_query($RepInfo_sql, $MySQL) or die(mysql_error());
-  $row_RepInfo = mysql_fetch_assoc($RepInfoRS);
+  $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysqli_error($MySQL));
+  $row_RepInfo = $RepInfoRS->fetch_assoc();
 
   while ($row_RepInfo) {
 
     $v_omon_s  = $row_RepInfo['vleftapaguar'];
     $v_omon_rs = $row_RepInfo['kursi'];
 
-    $row_RepInfo = mysql_fetch_assoc($RepInfoRS);
+    $row_RepInfo = $RepInfoRS->fetch_assoc();
   };
   mysqli_free_result($RepInfoRS);
 
@@ -128,7 +131,7 @@ while ($row_RepInfoM) {
     $v_mon_rs = 0;
 
     // Blerje
-    mysql_select_db($database_MySQL, $MySQL);
+    mysqli_select_db($MySQL, $database_MySQL);
     $RepInfo_sql = " select (sum(ek.vleftapaguar) / sum(ed.vleftadebituar)) kursi, sum(ed.vleftadebituar) vleftadebituar
                                  from exchange_koke as ek,
                                       exchange_detaje as ed,
@@ -146,20 +149,20 @@ while ($row_RepInfoM) {
                                   " . $v_perioddate . "
                              group by m1.monedha, m2.monedha ";
 
-    $RepInfoRS   = mysql_query($RepInfo_sql, $MySQL) or die(mysql_error());
-    $row_RepInfo = mysql_fetch_assoc($RepInfoRS);
+    $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysqli_error($MySQL));
+    $row_RepInfo = $RepInfoRS->fetch_assoc();
 
     while ($row_RepInfo) {
 
       $v_mon_b  = $row_RepInfo['vleftadebituar'];
       $v_mon_rb = $row_RepInfo['kursi'];
 
-      $row_RepInfo = mysql_fetch_assoc($RepInfoRS);
+      $row_RepInfo = $RepInfoRS->fetch_assoc();
     };
     mysqli_free_result($RepInfoRS);
 
     // Shitje
-    mysql_select_db($database_MySQL, $MySQL);
+    mysqli_select_db($MySQL, $database_MySQL);
     $RepInfo_sql = " select sum(ek.vleftapaguar) vleftapaguar, (sum(ed.vleftadebituar) / sum(ek.vleftapaguar)) kursi
                                  from exchange_koke as ek,
                                       exchange_detaje as ed,
@@ -177,15 +180,15 @@ while ($row_RepInfoM) {
                                   " . $v_perioddate . "
                              group by m1.monedha, m2.monedha ";
 
-    $RepInfoRS   = mysql_query($RepInfo_sql, $MySQL) or die(mysql_error());
-    $row_RepInfo = mysql_fetch_assoc($RepInfoRS);
+    $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysqli_error($MySQL));
+    $row_RepInfo = $RepInfoRS->fetch_assoc();
 
     while ($row_RepInfo) {
 
       $v_mon_s  = $row_RepInfo['vleftapaguar'];
       $v_mon_rs = $row_RepInfo['kursi'];
 
-      $row_RepInfo = mysql_fetch_assoc($RepInfoRS);
+      $row_RepInfo = $RepInfoRS->fetch_assoc();
     };
     mysqli_free_result($RepInfoRS);
 
@@ -212,7 +215,7 @@ while ($row_RepInfoM) {
   // End Calculate period
   // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-  $row_RepInfoM = mysql_fetch_assoc($RepInfoMRS);
+  $row_RepInfoM = $RepInfoMRS->fetch_assoc();
 };
 mysqli_free_result($RepInfoMRS);
 

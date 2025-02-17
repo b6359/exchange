@@ -6,33 +6,34 @@ require_once('ConMySQL.php');
 
 
 $GLOBALS['CNAME']   = "EXCHANGE";
-session_register("CNAME");
 $_SESSION['CNAME']  = "EXCHANGE";
 $GLOBALS['CADDR']   = "Tiran&euml;";
-session_register("CADDR");
 $_SESSION['CADDR']  = "Tiran&euml;";
 $GLOBALS['CNIPT']   = "A12345678B";
-session_register("CNIPT");
 $_SESSION['CNIPT']  = "A12345678B";
 $GLOBALS['CADMI']   = "Administrator";
-session_register("CADMI");
 $_SESSION['CADMI']  = "Amdinistrator";
 $GLOBALS['CMOBI']   = "+355 69 123 4567";
-session_register("CMOBI");
 $_SESSION['CMOBI']  = "+355 69 123 4567";
 $GLOBALS['DPPPP']   = "1000000";
-session_register("DPPPP");
 $_SESSION['DPPPP']  = "1000000";
 
+// Initialize SQL where clauses
 $v_wheresql = "";
-$v_llog = 0;
+$v_wheresqls = "";
+$v_wheresqle = "";
 
-if ($_SESSION['Usertype'] == 2)  $v_llog = $_SESSION['Userfilial'];
-if ($_SESSION['Usertype'] == 3)  $v_llog = $_SESSION['Userfilial'];
-if ($_SESSION['Usertype'] == 2)  $v_wheresql = " where id = " . $_SESSION['Userfilial'] . " ";
-if ($_SESSION['Usertype'] == 3)  $v_wheresql = " where id = " . $_SESSION['Userfilial'] . " ";
-if ($_SESSION['Usertype'] == 2)  $v_wheresqls = " and id_llogfilial = " . $_SESSION['Userfilial'] . " ";
-if ($_SESSION['Usertype'] == 3)  $v_wheresqls = " and id_llogfilial = " . $_SESSION['Userfilial'] . " ";
+// Set conditions based on user type
+if (($_SESSION['Usertype'] ?? '') === '2') {
+    $v_wheresql = " where id = " . (int)$_SESSION['Userfilial'] . " ";
+    $v_wheresqls = " where id <> " . (int)$_SESSION['Userfilial'] . " ";
+    $v_wheresqle = " and id_llogfilial = " . (int)$_SESSION['Userfilial'] . " ";
+}
+if (($_SESSION['Usertype'] ?? '') === '3') {
+    $v_wheresql = " where id = " . (int)$_SESSION['Userfilial'] . " ";
+    $v_wheresqls = " where id <> " . (int)$_SESSION['Userfilial'] . " ";
+    $v_wheresqle = " and id_llogfilial = " . (int)$_SESSION['Userfilial'] . " ";
+}
 
 ?>
 
@@ -118,9 +119,9 @@ if ($_SESSION['Usertype'] == 3)  $v_wheresqls = " and id_llogfilial = " . $_SESS
             </tr>
             <?php
             $sql_info = "select k.* from kursi_koka as k where id = (select max(id) from kursi_koka where 1=1 " . $v_wheresqls . ") " . $v_wheresqls;
-            $h_menu = mysql_query($sql_info, $MySQL) or die(mysql_error());
-            $row_h_menu = mysql_fetch_assoc($h_menu);
-            $totalRows_h_menu = mysql_num_rows($h_menu);
+            $h_menu = mysqli_query($MySQL, $sql_info) or die(mysqli_error($MySQL));
+            $row_h_menu = mysqli_fetch_assoc($h_menu);
+            $totalRows_h_menu = mysqli_num_rows($h_menu);
 
             if ($row_h_menu) { ?>
               <tr>
@@ -154,10 +155,10 @@ if ($_SESSION['Usertype'] == 3)  $v_wheresqls = " and id_llogfilial = " . $_SESS
                 <td height="5" colspan="6"></td>
               </tr>
               <?php
-              mysql_select_db($database_MySQL, $MySQL);
+              mysqli_select_db($MySQL, $database_MySQL);
               $data_sql_info = "select kursi_detaje.*, monedha.monedha from kursi_detaje, monedha where master_id = " . $row_h_menu['id'] . " and kursi_detaje.monedha_id = monedha.id and monedha.id not in (20, 21) order by kursi_detaje.monedha_id";
-              $h_data = mysql_query($data_sql_info, $MySQL) or die(mysql_error());
-              $row_h_data = mysql_fetch_assoc($h_data);
+              $h_data = mysqli_query($MySQL, $data_sql_info) or die(mysqli_error($MySQL));
+              $row_h_data = mysqli_fetch_assoc($h_data);
 
               $rownum = 0;
 
@@ -191,7 +192,7 @@ if ($_SESSION['Usertype'] == 3)  $v_wheresqls = " and id_llogfilial = " . $_SESS
                   <td></td>
                   <td align="center"><b><?php echo number_format($row_h_data['kursishitje'], 2, '.', ','); ?></b></td>
                 </tr>
-              <?php $row_h_data = mysql_fetch_assoc($h_data);
+              <?php $row_h_data = mysqli_fetch_assoc($h_data);
               };
               ?>
             <?php

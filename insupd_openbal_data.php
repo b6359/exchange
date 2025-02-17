@@ -20,9 +20,9 @@ if (isset($_SESSION['uid'])) {
       $colname_menu_info = $_GET['hid'] ?? addslashes($_GET['hid']);
       //mysql_select_db($database_MySQL, $MySQL);
       $query_menu_info = sprintf("SELECT * FROM openbalance WHERE id = %s", $colname_menu_info);
-      $menu_info = mysqli_query($MySQL, $query_menu_info) or die(mysql_error());
+      $menu_info = mysqli_query($MySQL, $query_menu_info) or die(mysqli_error($MySQL));
       $row_menu_info = $menu_info->fetch_assoc();
-      $totalRows_menu_info = mysql_num_rows($menu_info);
+      $totalRows_menu_info = $menu_info->num_rows;
 
       $id              = $row_menu_info['id'];
       $date_trans      = $row_menu_info['date_trans'];
@@ -39,7 +39,7 @@ if (isset($_SESSION['uid'])) {
   /////////////////////////////////////////////////////////////////////////////////////////////////
   function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "")
   {
-    $theValue = (!get_magic_quotes_gpc()) ? addslashes($theValue) : $theValue;
+    $theValue = addslashes($theValue) ?? $theValue;
 
     switch ($theType) {
       case "text":
@@ -76,7 +76,7 @@ if (isset($_SESSION['uid'])) {
     );
 
     //mysql_select_db($database_MySQL, $MySQL);
-    $Result1 = mysqli_query($MySQL, $updateSQL) or die(mysql_error());
+    $Result1 = mysqli_query($MySQL, $updateSQL) or die(mysqli_error($MySQL));
 
     $updateGoTo = "exchange_openbal.php";
 
@@ -91,8 +91,8 @@ if (isset($_SESSION['uid'])) {
   if ((isset($_POST["form_action"])) && ($_POST["form_action"] == "ins")) {
 
     $sql_id_info = "select kodllogari from filiali where id = " . $_POST['id_llogfilial'];
-    $id_info = mysqli_query($MySQL, $sql_id_info) or die(mysql_error());
-    $row_id_info = mysql_fetch_assoc($id_info);
+    $id_info = mysqli_query($MySQL, $sql_id_info) or die(mysqli_error($MySQL));
+    $row_id_info = $id_info->fetch_assoc();
     $id_llogarie01 = $row_id_info['kodllogari'];
 
     $insertSQL = sprintf(
@@ -108,7 +108,7 @@ if (isset($_SESSION['uid'])) {
     );
 
     //mysql_select_db($database_MySQL);
-    $Result1 = mysqli_query($MySQL, $insertSQL) or die(mysql_error());
+    $Result1 = mysqli_query($MySQL, $insertSQL) or die(mysqli_error($MySQL));
     $id_calc = mysqli_insert_id($MySQL);
 
     // shtimi i rreshtave per transaksionet
@@ -127,7 +127,7 @@ if (isset($_SESSION['uid'])) {
         GetSQLValueString($user_info, "text"),
         GetSQLValueString($date, "date")
       );
-      $Result1 = mysqli_query($MySQL, $insertSQL) or die(mysql_error());
+      $Result1 = mysqli_query($MySQL, $insertSQL) or die(mysqli_error($MySQL));
     }
 
     $updateGoTo = "exchange_openbal.php";
@@ -141,14 +141,14 @@ if (isset($_SESSION['uid'])) {
 
   //----------------------------------------------------------------------------------
   $sql_info = "select * from kursi_koka where id = (select max(id) from kursi_koka)";
-  $id_kursi = mysqli_query($MySQL, $sql_info) or die(mysql_error());
+  $id_kursi = mysqli_query($MySQL, $sql_info) or die(mysqli_error($MySQL));
   $row_id_kursi = $id_kursi->fetch_assoc();
 
   $query_monkurs_info = " select kursi_detaje.*, monedha.monedha, monedha.id monid
                           from kursi_detaje, monedha
                          where master_id = " . $row_id_kursi['id'] . "
                            and kursi_detaje.monedha_id = monedha.id ";
-  $monkurs_info = mysqli_query($MySQL, $query_monkurs_info) or die(mysql_error());
+  $monkurs_info = mysqli_query($MySQL, $query_monkurs_info) or die(mysqli_error($MySQL));
   $row_monkurs_info = $monkurs_info->fetch_assoc();;
   //----------------------------------------------------------------------------------
 
@@ -332,7 +332,7 @@ if (isset($_SESSION['uid'])) {
             <DIV class=ctxheading>
 
               <form enctype="multipart/form-data" ACTION="insupd_openbal_data.php" METHOD="POST" name="formmenu">
-                <input name="form_action" type="hidden" value="<?php echo $_GET[action]; ?>">
+                <input name="form_action" type="hidden" value="<?php echo $_GET['action']; ?>">
                 <input name="id" type="hidden" value="<?php echo $id; ?>">
                 <input name="rate_value" type="hidden" value="1">
                 <table width="600px" border="0" cellpadding="0" cellspacing="5">
@@ -359,7 +359,7 @@ if (isset($_SESSION['uid'])) {
 
                         //mysql_select_db($database_MySQL, $MySQL);
                         $query_filiali_info = "select * from filiali " . $v_wheresql . " order by filiali asc";
-                        $filiali_info = mysql_query($query_filiali_info, $MySQL) or die(mysql_error());
+                        $filiali_info = mysqli_query($MySQL, $query_filiali_info) or die(mysqli_error($MySQL));
                         $row_filiali_info = $filiali_info->fetch_assoc();
                         while ($row_filiali_info) {
                         ?>
@@ -379,7 +379,7 @@ if (isset($_SESSION['uid'])) {
                         <?php
                         //mysql_select_db($database_MySQL, $MySQL);
                         $query_monedha_info = "select * from monedha order by id asc";
-                        $monedha_info = mysql_query($query_monedha_info, $MySQL) or die(mysql_error());
+                        $monedha_info = mysqli_query($MySQL, $query_monedha_info) or die(mysqli_error($MySQL));
                         $row_monedha_info = $monedha_info->fetch_assoc();
                         while ($row_monedha_info) {
                         ?>

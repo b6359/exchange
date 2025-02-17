@@ -37,7 +37,7 @@ if (isset($_SESSION['uid'])) {
   $user_info = $_SESSION['Username'] ?? addslashes($_SESSION['Username']);
 
   $query_klienti_info = "select * from klienti where (id > 100 or id = 1) order by id asc";
-  $klienti_info = mysqli_query($MySQL, $query_klienti_info) or die(mysql_error());
+  $klienti_info = mysqli_query($MySQL, $query_klienti_info) or die(mysqli_error($MySQL));
   $row_klienti_info = $klienti_info->fetch_assoc();
 
 ?>
@@ -209,9 +209,9 @@ if (isset($_SESSION['uid'])) {
                                 <?php
                                 while ($row_klienti_info) {
                                 ?>
-                                  <option value="<?php echo $row_klienti_info['id']; ?>"><?php echo $row_klienti_info['emriplote']; ?></option>
+                                  <option value="<?php echo htmlspecialchars($row_klienti_info['id']); ?>"><?php echo htmlspecialchars($row_klienti_info['emriplote']); ?></option>
                                 <?php
-                                  $row_klienti_info = mysql_fetch_assoc($klienti_info);
+                                  $row_klienti_info = $klienti_info->fetch_assoc();
                                 }
                                 mysqli_free_result($klienti_info);
                                 ?>

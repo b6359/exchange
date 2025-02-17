@@ -1,41 +1,46 @@
 <?php
+declare(strict_types=1);
 
 session_start();
 date_default_timezone_set('Europe/Tirane');
 
-// ** Logout the current user. **
+// Build logout URL with proper escaping
 $logoutAction = $_SERVER['PHP_SELF'] . "?doLogout=true";
-if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")) {
-  $logoutAction .= "&" . htmlentities($_SERVER['QUERY_STRING']);
+if (!empty($_SERVER['QUERY_STRING'])) {
+    $logoutAction .= "&" . htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES, 'UTF-8');
 }
 
-if ((isset($_GET['doLogout'])) && ($_GET['doLogout'] == "true")) {
-  // logout
-  $GLOBALS['uid']         = "";
-  $GLOBALS['Username']    = "";
-  $GLOBALS['full_name']   = "";
-  $GLOBALS['Usertrans']   = "";
-  $GLOBALS['Userfilial']  = "";
-  $GLOBALS['Usertype']    = "";
-  $_SESSION['uid']        = "";
-  $_SESSION['Username']   = "";
-  $_SESSION['full_name']  = "";
-  $_SESSION['Usertrans']  = "";
-  $_SESSION['Userfilial'] = "";
-  $_SESSION['Usertype']   = "";
+// Handle logout
+if (isset($_GET['doLogout']) && $_GET['doLogout'] === "true") {
+    // Clear both global and session variables
+    $sessionVars = [
+        'uid',
+        'Username',
+        'full_name',
+        'Usertrans',
+        'Userfilial',
+        'Usertype'
+    ];
 
-  $logoutGoTo = "index.php";
-  if ($logoutGoTo) {
-    header("Location: $logoutGoTo");
-    exit;
-  }
+    // Clear session and global variables
+    foreach ($sessionVars as $var) {
+        unset($GLOBALS[$var]);
+        unset($_SESSION[$var]);
+    }
+
+    // Redirect to login page
+    $logoutGoTo = "index.php";
+    if ($logoutGoTo) {
+        header("Location: $logoutGoTo", true, 302);
+        exit;
+    }
 }
-?>
-<?php require_once('ConMySQL.php'); ?>
-<?php
 
+require_once('ConMySQL.php');
+
+// Check for active session
 if (isset($_SESSION['uid'])) {
-
+    // Your protected content goes here
 ?>
 
 
@@ -162,7 +167,6 @@ if (isset($_SESSION['uid'])) {
                 if ($_SESSION['Usertype'] == 2)  $v_wheresql = " and ek.id_llogfilial = " . $_SESSION['Userfilial'] . " ";
                 if ($_SESSION['Usertype'] == 3)  $v_wheresql = " and ek.perdoruesi    = '" . $_SESSION['Username'] . "' ";
 
-                mysql_select_db($database_MySQL, $MySQL);
                 $query_gjendje_info = " select tab_info.llogaria, tab_info.monedha, sum(tab_info.vleftakredituar) vleftakredituar, sum(tab_info.vleftadebituar) vleftadebituar
                                   from (
                                              select ek.id_llogkomision llogaria, m1.monedha, sum(ek.vleftakomisionit) vleftakredituar, sum(0) vleftadebituar
@@ -195,8 +199,8 @@ if (isset($_SESSION['uid'])) {
                                        ) tab_info
                                group by tab_info.llogaria, tab_info.monedha
                                order by tab_info.llogaria, tab_info.monedha";
-                $gjendje_info     = mysql_query($query_gjendje_info, $MySQL) or die(mysql_error());
-                $row_gjendje_info = mysql_fetch_assoc($gjendje_info);
+                $gjendje_info     = mysqli_query($MySQL, $query_gjendje_info) or die(mysqli_error($MySQL));
+                $row_gjendje_info = mysqli_fetch_assoc($gjendje_info);
 
                 while ($row_gjendje_info) {
                 ?>
@@ -209,7 +213,7 @@ if (isset($_SESSION['uid'])) {
                     <td align="right"><?php echo number_format($row_gjendje_info['vleftadebituar'], 2, '.', ','); ?>&nbsp; &nbsp;</td>
                     <td align="right"><?php echo number_format($row_gjendje_info['vleftakredituar'], 2, '.', ','); ?>&nbsp; &nbsp;</td>
                   </tr>
-                <?php $row_gjendje_info = mysql_fetch_assoc($gjendje_info);
+                <?php $row_gjendje_info = mysqli_fetch_assoc($gjendje_info);
                 }
                 mysqli_free_result($gjendje_info);
                 // ---------------------------------------------------------------------------------
@@ -254,8 +258,8 @@ if (isset($_SESSION['uid'])) {
                                       ) tab_info
                              group by tab_info.monedha
                              order by tab_info.monedha ";
-                $gjendje_info = mysql_query($query_gjendje_info, $MySQL) or die(mysql_error());
-                $row_gjendje_info = mysql_fetch_assoc($gjendje_info);
+                $gjendje_info = mysqli_query($MySQL, $query_gjendje_info) or die(mysqli_error($MySQL));
+                $row_gjendje_info = mysqli_fetch_assoc($gjendje_info);
 
                 while ($row_gjendje_info) {
                 ?>
@@ -268,7 +272,7 @@ if (isset($_SESSION['uid'])) {
                     <td align="right"><b><?php echo number_format($row_gjendje_info['vleftadebituar'], 2, '.', ','); ?></b>&nbsp; &nbsp;</td>
                     <td align="right"><b><?php echo number_format($row_gjendje_info['vleftakredituar'], 2, '.', ','); ?></b>&nbsp; &nbsp;</td>
                   </tr>
-                <?php $row_gjendje_info = mysql_fetch_assoc($gjendje_info);
+                <?php $row_gjendje_info = mysqli_fetch_assoc($gjendje_info);
                 }
                 mysqli_free_result($gjendje_info);
                 ?>

@@ -1,41 +1,47 @@
 <?php
+declare(strict_types=1);
 
 session_start();
 date_default_timezone_set('Europe/Tirane');
 
-// ** Logout the current user. **
+// Build logout URL with proper escaping
 $logoutAction = $_SERVER['PHP_SELF'] . "?doLogout=true";
-if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")) {
-  $logoutAction .= "&" . htmlentities($_SERVER['QUERY_STRING']);
+if (!empty($_SERVER['QUERY_STRING'])) {
+    $logoutAction .= "&" . htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES, 'UTF-8');
 }
 
-if ((isset($_GET['doLogout'])) && ($_GET['doLogout'] == "true")) {
-  // logout
-  $GLOBALS['uid']         = "";
-  $GLOBALS['Username']    = "";
-  $GLOBALS['full_name']   = "";
-  $GLOBALS['Usertrans']   = "";
-  $GLOBALS['Userfilial']  = "";
-  $GLOBALS['Usertype']    = "";
-  $_SESSION['uid']        = "";
-  $_SESSION['Username']   = "";
-  $_SESSION['full_name']  = "";
-  $_SESSION['Usertrans']  = "";
-  $_SESSION['Userfilial'] = "";
-  $_SESSION['Usertype']   = "";
+// Handle logout
+if (isset($_GET['doLogout']) && $_GET['doLogout'] === "true") {
+    // Clear both global and session variables
+    $sessionVars = [
+        'uid',
+        'Username',
+        'full_name',
+        'Usertrans',
+        'Userfilial',
+        'Usertype'
+    ];
 
-  $logoutGoTo = "index.php";
-  if ($logoutGoTo) {
-    header("Location: $logoutGoTo");
-    exit;
-  }
+    // Clear session and global variables
+    foreach ($sessionVars as $var) {
+        unset($GLOBALS[$var]);
+        unset($_SESSION[$var]);
+    }
+
+    // Redirect to login page
+    $logoutGoTo = "index.php";
+    if ($logoutGoTo) {
+        header("Location: $logoutGoTo", true, 302);
+        exit;
+    }
 }
-?>
-<?php require_once('ConMySQL.php'); ?>
-<?php
 
+require_once('ConMySQL.php');
+
+// Check for active session and initialize user info
 if (isset($_SESSION['uid'])) {
-  $user_info = $_SESSION['uid'] ?? addslashes($_SESSION['uid']);
+    // Use null coalescing operator instead of addslashes
+    $user_info = $_SESSION['uid'] ?? '';
 ?>
 
 

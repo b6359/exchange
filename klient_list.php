@@ -44,39 +44,65 @@
 
     require_once('ConMySQL.php');
 
-    mysql_select_db($database_MySQL, $MySQL);
+    // Initialize the where clause with prepared statement parameters
     $where = " WHERE TRUE ";
-    if ((isset($_POST["emri"])) && ($_POST["emri"] != "")) {
-      $where = " WHERE emri like '%" . $_POST["emri"] . "%' or mbiemri like '%" . $_POST["emri"] . "%' ";
-    }
-    $rec_limit = 10;
-    $sql = "SELECT count(id) FROM klienti " . $where;
-    $retval = mysql_query($sql, $MySQL);
-    if (! $retval) {
-      die('Could not get data: ' . mysql_error());
-    }
-    $row = mysql_fetch_array($retval, MYSQL_NUM);
-    $rec_count = $row[0];
+    $params = [];
+    $types = "";
 
-    if (isset($_GET{
-    'page'})) {
-      $page = $_GET{
-      'page'} + 1;
-      $offset = $rec_limit * $page;
-    } else {
-      $page = 0;
-      $offset = 0;
+    if (!empty($_POST["emri"])) {
+        $search_term = "%" . $_POST["emri"] . "%";
+        $where = " WHERE emri LIKE ? OR mbiemri LIKE ? ";
+        $params = [$search_term, $search_term];
+        $types = "ss";
     }
+
+    $rec_limit = 10;
+
+    // Get total count using prepared statement
+    $count_sql = "SELECT COUNT(id) FROM klienti" . $where;
+    $stmt = mysqli_prepare($MySQL, $count_sql);
+    if ($params) {
+        mysqli_stmt_bind_param($stmt, $types, ...$params);
+    }
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if (!$result) {
+        die('Could not get data: ' . mysqli_error($MySQL));
+    }
+    $row = mysqli_fetch_array($result, MYSQLI_NUM);
+    $rec_count = $row[0];
+    mysqli_stmt_close($stmt);
+
+    // Calculate pagination
+    $page = isset($_GET['page']) ? (int)$_GET['page'] + 1 : 0;
+    $offset = $rec_limit * $page;
     $left_rec = $rec_count - ($page * $rec_limit);
 
-    $sql_info = "SELECT id, emri, mbiemri, telefon, nrpashaporte, docname " .
-      "FROM klienti " .
-      $where .
-      " order by id " .
-      "LIMIT $offset, $rec_limit";
-    $h_menu = mysql_query($sql_info, $MySQL) or die(mysql_error());
-    $row_h_menu = mysql_fetch_assoc($h_menu);
-    $totalRows_h_menu = mysql_num_rows($h_menu);
+    // Get client data using prepared statement
+    $sql_info = "SELECT id, emri, mbiemri, telefon, nrpashaporte, docname 
+                 FROM klienti " . 
+                 $where . 
+                 " ORDER BY id 
+                 LIMIT ?, ?";
+
+    $stmt = mysqli_prepare($MySQL, $sql_info);
+    if ($params) {
+        // Add pagination parameters
+        $params[] = $offset;
+        $params[] = $rec_limit;
+        mysqli_stmt_bind_param($stmt, $types . "ii", ...$params);
+    } else {
+        mysqli_stmt_bind_param($stmt, "ii", $offset, $rec_limit);
+    }
+
+    mysqli_stmt_execute($stmt);
+    $h_menu = mysqli_stmt_get_result($stmt);
+    if (!$h_menu) {
+        die('Query failed: ' . mysqli_error($MySQL));
+    }
+
+    $row_h_menu = mysqli_fetch_assoc($h_menu);
+    $totalRows_h_menu = mysqli_num_rows($h_menu);
     ?>
     <table width="300px" border="0">
       <tr>
@@ -103,7 +129,7 @@
                 <td height="16"><a href="JavaScript: return_value('<?php echo $row_h_menu['id']; ?>');" class="link4"><b><?php echo $row_h_menu['emri'] . " " . $row_h_menu['mbiemri']; ?></b></a></td>
                 <td class="titull"></td>
               </tr>
-            <?php $row_h_menu = mysql_fetch_assoc($h_menu);
+            <?php $row_h_menu = mysqli_fetch_assoc($h_menu);
             };
             mysqli_free_result($h_menu);
             ?>

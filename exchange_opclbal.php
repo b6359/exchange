@@ -58,7 +58,7 @@ if (isset($_SESSION['uid'])) {
     if ((isset($_POST["act"])) && ($_POST["act"] == "open")) {
 
       $updateSQL = "UPDATE opencloseday SET opstatus = 'O', opdate = '" . strftime('%Y-%m-%d') . "', opuser = " . $_SESSION['uid'];
-      $Result1   = mysqli_query($MySQL, $updateSQL) or die(mysql_error());
+      $Result1   = mysqli_query($MySQL, $updateSQL) or die(mysqli_error($MySQL));
 
       $updateGoTo = "exchange_opclbal.php";
       header(sprintf("Location: %s", $updateGoTo));
@@ -68,12 +68,12 @@ if (isset($_SESSION['uid'])) {
       set_time_limit(0);
 
       $updateSQL = "UPDATE opencloseday SET opstatus = 'C', opdate = '" . strftime('%Y-%m-%d') . "', opuser = " . $_SESSION['uid'];
-      $Result1   = mysqli_query($MySQL, $updateSQL) or die(mysql_error());
+      $Result1   = mysqli_query($MySQL, $updateSQL) or die(mysqli_error($MySQL));
 
       // ---------------------------------------------------------------------------------
       $filiali_sql  = "select * from filiali order by id";
-      $filiali_info = mysqli_query($MySQL, $filiali_sql) or die(mysql_error());
-      $row_filiali_info = $filiali_info->fetch_assoc();
+      $filiali_info = mysqli_query($MySQL, $filiali_sql) or die(mysqli_error($MySQL));
+      $row_filiali_info = mysqli_fetch_assoc($filiali_info);
 
       while ($row_filiali_info) {
 
@@ -108,14 +108,14 @@ if (isset($_SESSION['uid'])) {
                                        min(id_opb) id_opb
                                   FROM systembalance
                                  WHERE id_llogfilial = " . $row_filiali_info['id'] . " ";
-        $gjendje_info     = mysqli_query($MySQL, $query_gjendje_info) or die(mysql_error());
-        $row_gjendje_info = $gjendje_info->fetch_assoc();
+        $gjendje_info     = mysqli_query($MySQL, $query_gjendje_info) or die(mysqli_error($MySQL));
+        $row_gjendje_info = mysqli_fetch_assoc($gjendje_info);
 
         while ($row_gjendje_info) {
 
           $sql_info   = "select * from monedha order by id";
-          $h_menu     = mysqli_query($MySQL, $sql_info) or die(mysql_error());
-          $row_h_menu = $h_menu->fetch_assoc();
+          $h_menu     = mysqli_query($MySQL, $sql_info) or die(mysqli_error($MySQL));
+          $row_h_menu = mysqli_fetch_assoc($h_menu);
 
           while ($row_h_menu) {
 
@@ -175,8 +175,8 @@ if (isset($_SESSION['uid'])) {
                                                   AND chstatus          = 'T'
                                                   " . $v_whereidcli2 . "
                                              ) info ";
-            $hyrjedalje_info = mysqli_query($MySQL, $sql_hyrjedalje,) or die(mysql_error());
-            $row_hyrjedalje  = $hyrjedalje_info->fetch_assoc();
+            $hyrjedalje_info = mysqli_query($MySQL, $sql_hyrjedalje) or die(mysqli_error($MySQL));
+            $row_hyrjedalje  = mysqli_fetch_assoc($hyrjedalje_info);
 
             while ($row_hyrjedalje) {
 
@@ -193,7 +193,7 @@ if (isset($_SESSION['uid'])) {
                                                                 " . $row_h_menu['monedha'] . "RATE = 1
                                                          WHERE  id_llogfilial = " . $row_filiali_info['id'];
               }
-              $ResultSYSBal = mysqli_query($MySQL, $updateSYSBalSQL) or die(mysql_error());
+              $ResultSYSBal = mysqli_query($MySQL, $updateSYSBalSQL) or die(mysqli_error($MySQL));
 
               $row_hyrjedalje = $hyrjedalje_info->fetch_assoc();
             }
@@ -203,12 +203,12 @@ if (isset($_SESSION['uid'])) {
           }
           mysqli_free_result($h_menu);
 
-          $row_gjendje_info = $gjendje_info->fetch_assoc();
+          $row_gjendje_info = mysqli_fetch_assoc($gjendje_info);
         }
         mysqli_free_result($gjendje_info);
         // ---------------------------------------------------------------------------------
 
-        $row_filiali_info = $filiali_info->fetch_assoc();
+        $row_filiali_info = mysqli_fetch_assoc($filiali_info);
       }
       mysqli_free_result($filiali_info);
       // ---------------------------------------------------------------------------------
@@ -219,24 +219,24 @@ if (isset($_SESSION['uid'])) {
       $id_opb = 0;
 
       $sql_chn_info = "select max(unique_id) as nr from exchange_koke ";
-      $chn_info     = mysqli_query($MySQL, $sql_chn_info) or die(mysql_error());
-      $row_chn_info = $chn_info->fetch_assoc();
+      $chn_info     = mysqli_query($MySQL, $sql_chn_info) or die(mysqli_error($MySQL));
+      $row_chn_info = mysqli_fetch_assoc($chn_info);
       if (($row_chn_info) && ($row_chn_info['nr'] != null)) {
         $id_chn = $row_chn_info['nr'];
       }
       mysqli_free_result($chn_info);
 
       $sql_hd_info = "select max(unique_id) as nr from hyrjedalje ";
-      $hd_info     = mysqli_query($MySQL, $sql_hd_info) or die(mysql_error());
-      $row_hd_info = $hd_info->fetch_assoc();
+      $hd_info     = mysqli_query($MySQL, $sql_hd_info) or die(mysqli_error($MySQL));
+      $row_hd_info = mysqli_fetch_assoc($hd_info);
       if (($row_hd_info) && ($row_hd_info['nr'] != null)) {
         $id_hd = $row_hd_info['nr'];
       }
       mysqli_free_result($hd_info);
 
       $sql_opb_info = "select max(id) as nr from openbalance ";
-      $opb_info     = mysqli_query($MySQL, $sql_opb_info) or die(mysql_error());
-      $row_opb_info = $opb_info->fetch_assoc();
+      $opb_info     = mysqli_query($MySQL, $sql_opb_info) or die(mysqli_error($MySQL));
+      $row_opb_info = mysqli_fetch_assoc($opb_info);
       if (($row_opb_info) && ($row_opb_info['nr'] != null)) {
         $id_opb = $row_opb_info['nr'];
       }
@@ -247,12 +247,12 @@ if (isset($_SESSION['uid'])) {
                                          id_chn = " . $id_chn . ",
                                          id_hd  = " . $id_hd . ",
                                          id_opb = " . $id_opb . " ";
-      $ResUPDId  = mysqli_query($MySQL, $UPDIdSQL) or die(mysql_error());
+      $ResUPDId  = mysqli_query($MySQL, $UPDIdSQL) or die(mysqli_error($MySQL));
 
       $InsSysBalSQL = "INSERT INTO systembalance_hist (date_trans, perdoruesi, id_llogfilial, id_chn, id_hd, id_opb, LEK, USD, EUR, CHF, GBP, DKK, NOK, SEK, CAD, AUD, MKD, LEKRATE, USDRATE, EURRATE, CHFRATE, GBPRATE, DKKRATE, NOKRATE, SEKRATE, CADRATE, AUDRATE, MKDRATE, datarregjistrimit)
                                             select date_trans, perdoruesi, id_llogfilial, id_chn, id_hd, id_opb, LEK, USD, EUR, CHF, GBP, DKK, NOK, SEK, CAD, AUD, MKD, LEKRATE, USDRATE, EURRATE, CHFRATE, GBPRATE, DKKRATE, NOKRATE, SEKRATE, CADRATE, AUDRATE, MKDRATE, datarregjistrimit
                                               from systembalance ";
-      $ResInsSysBal = mysqli_query($MySQL, $InsSysBalSQL) or die(mysql_error());
+      $ResInsSysBal = mysqli_query($MySQL, $InsSysBalSQL) or die(mysqli_error($MySQL));
 
       $updateGoTo = "exchange_opclbal.php";
       header(sprintf("Location: %s", $updateGoTo));
@@ -626,8 +626,8 @@ if (isset($_SESSION['uid'])) {
                             <?php
 
                             $filiali_sql  = "select * from filiali order by id asc";
-                            $filiali_info = mysqli_query($MySQL, $filiali_sql) or die(mysql_error());
-                            $row_filiali_info = $filiali_info->fetch_assoc();
+                            $filiali_info = mysqli_query($MySQL, $filiali_sql) or die(mysqli_error($MySQL));
+                            $row_filiali_info = mysqli_fetch_assoc($filiali_info);
 
                             while ($row_filiali_info) {
                             ?>
@@ -635,7 +635,7 @@ if (isset($_SESSION['uid'])) {
                                                                                         echo "selected";
                                                                                       } ?>><?php echo $row_filiali_info['filiali']; ?></option>
                             <?php
-                              $row_filiali_info = $filiali_info->fetch_assoc();;
+                              $row_filiali_info = mysqli_fetch_assoc($filiali_info);
                             }
                             mysqli_free_result($filiali_info);
                             ?>
@@ -647,8 +647,8 @@ if (isset($_SESSION['uid'])) {
                         if ((isset($_SESSION['uid'])) && ($_SESSION['Usertype'] == 1)) {
 
                           $sql_id_info = "select opstatus from opencloseday ";
-                          $id_info     = mysqli_query($MySQL, $sql_id_info) or die(mysql_error());
-                          $row_id_info = $id_info->fetch_assoc();
+                          $id_info     = mysqli_query($MySQL, $sql_id_info) or die(mysqli_error($MySQL));
+                          $row_id_info = mysqli_fetch_assoc($id_info);
                           $opstatus    = $row_id_info['opstatus'];
                           if ($opstatus == "C") {
                         ?>
@@ -713,8 +713,8 @@ if (isset($_SESSION['uid'])) {
                                  min(id_opb) id_opb
                             FROM systembalance
                               " . $v_wheresql . " ";
-                    $gjendje_info     = mysqli_query($MySQL, $query_gjendje_info) or die(mysql_error());
-                    $row_gjendje_info = $gjendje_info->fetch_assoc();
+                    $gjendje_info     = mysqli_query($MySQL, $query_gjendje_info) or die(mysqli_error($MySQL));
+                    $row_gjendje_info = mysqli_fetch_assoc($gjendje_info);
 
                     $v_hyre_lek = 0;
                     $v_hyrje_lek = 0;
@@ -730,8 +730,8 @@ if (isset($_SESSION['uid'])) {
                       <?php
 
                       $sql_info   = "select * from monedha order by id";
-                      $h_menu     = mysqli_query($MySQL, $sql_info) or die(mysql_error());
-                      $row_h_menu = $h_menu->fetch_assoc();
+                      $h_menu     = mysqli_query($MySQL, $sql_info) or die(mysqli_error($MySQL));
+                      $row_h_menu = mysqli_fetch_assoc($h_menu);
                       $rownum     = 0;
 
                       while ($row_h_menu) {
@@ -800,8 +800,8 @@ if (isset($_SESSION['uid'])) {
                                     AND chstatus          = 'T'
                                     " . $v_whereidcli . "
                                ) info ";
-                        $hyrjedalje_info = mysqli_query($MySQL, $sql_hyrjedalje) or die(mysql_error());
-                        $row_hyrjedalje  = $hyrjedalje_info->fetch_assoc();
+                        $hyrjedalje_info = mysqli_query($MySQL, $sql_hyrjedalje) or die(mysqli_error($MySQL));
+                        $row_hyrjedalje  = mysqli_fetch_assoc($hyrjedalje_info);
 
                         //  if ($row_h_menu['id'] == "2") echo $sql_hyrjedalje;
 

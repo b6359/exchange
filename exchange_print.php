@@ -11,11 +11,8 @@ if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")) {
 
 if ((isset($_GET['doLogout'])) && ($_GET['doLogout'] == "true")) {
   // logout
-  session_unregister('Usertrans');
-  session_unregister('Userfilial');
-  session_unregister('Username');
-  session_unregister('full_name');
-  session_unregister('uid');
+  session_unset();
+  session_destroy();
 
   $logoutGoTo = "index.php";
   if ($logoutGoTo) {
@@ -30,17 +27,17 @@ if ((isset($_GET['doLogout'])) && ($_GET['doLogout'] == "true")) {
 <?php
 
 if (isset($_SESSION['uid'])) {
-  $user_info = (get_magic_quotes_gpc()) ? $_SESSION['Username'] : addslashes($_SESSION['Username']);
+  $user_info = $_SESSION['Username'] ?? addslashes($_SESSION['Username']);
 
-  mysql_select_db($database_MySQL, $MySQL);
+  mysqli_select_db($MySQL, $database_MySQL);
 
   $sql_exchange_info = "select * from exchange_koke where id = '" . $user_info . 'CHN' . $_GET['hid'] . "'";
-  $exchange_info = mysql_query($sql_exchange_info, $MySQL) or die(mysql_error());
-  $row_exchange_info = mysql_fetch_assoc($exchange_info);
+  $exchange_info = mysqli_query($MySQL, $sql_exchange_info) or die(mysqli_error($MySQL));
+  $row_exchange_info = mysqli_fetch_assoc($exchange_info);
 
   $sql_exchange_det_info = "select * from exchange_detaje where id_exchangekoke = '" . $row_exchange_info['id'] . "' ";
-  $exchange_det_info = mysql_query($sql_exchange_det_info, $MySQL) or die(mysql_error());
-  $row_exchange_det_info = mysql_fetch_assoc($exchange_det_info);
+  $exchange_det_info = mysqli_query($MySQL, $sql_exchange_det_info) or die(mysqli_error($MySQL));
+  $row_exchange_det_info = mysqli_fetch_assoc($exchange_det_info);
   $time = date("H:i");
 ?>
 
@@ -147,8 +144,8 @@ if (isset($_SESSION['uid'])) {
                   <td></td>
                   <?php
                   $sql_subinfo = "select * from klienti where id = " . $row_exchange_info['id_klienti'];
-                  $rs_subinfo = mysql_query($sql_subinfo, $MySQL) or die(mysql_error());
-                  $row_rs_subinfo = mysql_fetch_assoc($rs_subinfo);
+                  $rs_subinfo = mysqli_query($MySQL, $sql_subinfo) or die(mysqli_error($MySQL));
+                  $row_rs_subinfo = mysqli_fetch_assoc($rs_subinfo);
                   $info = $row_rs_subinfo['emriplote'];
                   mysqli_free_result($rs_subinfo);
                   ?>
@@ -164,8 +161,8 @@ if (isset($_SESSION['uid'])) {
                   <td></td>
                   <?php
                   $sql_subinfo = "select * from monedha where id = " . $row_exchange_det_info['id_mondebituar'];
-                  $rs_subinfo = mysql_query($sql_subinfo, $MySQL) or die(mysql_error());
-                  $row_rs_subinfo = mysql_fetch_assoc($rs_subinfo);
+                  $rs_subinfo = mysqli_query($MySQL, $sql_subinfo) or die(mysqli_error($MySQL));
+                  $row_rs_subinfo = mysqli_fetch_assoc($rs_subinfo);
                   $info = $row_rs_subinfo['monedha'];
                   mysqli_free_result($rs_subinfo);
                   ?>
@@ -183,8 +180,8 @@ if (isset($_SESSION['uid'])) {
                 </tr>
                 <?php
                 $sql_subinfo = "select * from monedha where id = " . $row_exchange_info['id_monkreditim'];
-                $rs_subinfo = mysql_query($sql_subinfo, $MySQL) or die(mysql_error());
-                $row_rs_subinfo = mysql_fetch_assoc($rs_subinfo);
+                $rs_subinfo = mysqli_query($MySQL, $sql_subinfo) or die(mysqli_error($MySQL));
+                $row_rs_subinfo = mysqli_fetch_assoc($rs_subinfo);
                 $info = $row_rs_subinfo['monedha'];
                 mysqli_free_result($rs_subinfo);
                 ?>

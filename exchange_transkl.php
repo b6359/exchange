@@ -47,7 +47,7 @@ if (isset($_SESSION['uid'])) {
   }
 
   if (isset($_GET['action']) && ($_GET['action'] == "del")) {
-    $sql_info = "UPDATE exchange_koke SET chstatus ='F' WHERE id = '" . $_GET[tid] . "'";
+    $sql_info = "UPDATE exchange_koke SET chstatus ='F' WHERE id = '" . $_GET['tid'] . "'";
     $result = $MySQL->query($sql_info);
   }
 ?>
@@ -266,8 +266,8 @@ if (isset($_SESSION['uid'])) {
                       order by ek.unique_id desc
                    ";
 
-                            $MySQL->query($RepInfo_sql) or die(mysql_error());
-                            $RepInfoRS   = $MySQL->query($RepInfo_sql) or die(mysql_error());
+                            $MySQL->query($RepInfo_sql) or die(mysqli_error($MySQL));
+                            $RepInfoRS   = $MySQL->query($RepInfo_sql) or die(mysqli_error($MySQL));
                             $row_RepInfo = $RepInfoRS->fetch_assoc();
 
                             while ($row_RepInfo) {
@@ -300,7 +300,7 @@ if (isset($_SESSION['uid'])) {
                               <tr>
                                 <td colspan="9" align="left" class="OraCellGroup2"> &nbsp;P&euml;rshkrimi: &nbsp;<?php echo $row_RepInfo['pershkrimi']; ?></td>
                               </tr>
-                            <?php $row_RepInfo = mysql_fetch_assoc($RepInfoRS);
+                            <?php $row_RepInfo = $RepInfoRS->fetch_assoc();
                             };
                             mysqli_free_result($RepInfoRS);
                             ?>

@@ -40,7 +40,7 @@ if (isset($_SESSION['uid'])) {
     $sql_info = "DELETE FROM llogarite 
       WHERE id = " . $_GET['hid'] . "
       AND (SELECT COUNT(*) FROM exchange_koke WHERE exchange_koke.id_llogfilial = llogarite.id) = 0";
-    $result = mysqli_query($MySQL, $sql_info) or die(mysql_error());
+    $result = mysqli_query($MySQL, $sql_info) or die(mysqli_error($MySQL));
   }
   ?>
 
@@ -213,7 +213,7 @@ if (isset($_SESSION['uid'])) {
                 <?php
 
                 $sql_info = "select * from llogarite order by kodi asc";
-                $h_menu = mysqli_query($MySQL, $sql_info) or die(mysql_error());
+                $h_menu = mysqli_query($MySQL, $sql_info) or die(mysqli_error($MySQL));
                 $row_h_menu = $h_menu->fetch_assoc();
                 $totalRows_h_menu = $h_menu->num_rows;
 

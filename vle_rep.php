@@ -37,7 +37,7 @@ if (isset($_SESSION['uid'])) {
   $user_info = $_SESSION['Username'] ?? addslashes($_SESSION['Username']);
 
   $query_klienti_info = "select * from klienti where (id > 100 or id = 1) order by id asc";
-  $klienti_info = mysqli_query($MySQL, $query_klienti_info) or die(mysql_error());
+  $klienti_info = mysqli_query($MySQL, $query_klienti_info) or die(mysqli_error($MySQL));
   $row_klienti_info = $klienti_info->fetch_assoc();
 
 ?>

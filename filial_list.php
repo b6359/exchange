@@ -53,8 +53,8 @@ session_start();
         if ($_SESSION['Usertype'] == 3)  $v_wheresql = " where id = " . $_SESSION['Userfilial'] . " ";
 
         $query_filiali_info = "select * from filiali " . $v_wheresql . " order by filiali asc";
-        $filiali_info = mysql_query($query_filiali_info, $MySQL) or die(mysql_error());
-        $row_filiali_info = mysql_fetch_assoc($filiali_info);
+        $filiali_info = mysqli_query($MySQL, $query_filiali_info) or die(mysqli_error($MySQL));
+        $row_filiali_info = mysqli_fetch_assoc($filiali_info);
 
         ?>
         <table width="300" height="100%" border="0">
@@ -81,7 +81,7 @@ session_start();
                                 <td height="16"><a href="JavaScript: return_value('<?php echo $row_filiali_info['id']; ?>');" class="link4"><b><?php echo $row_filiali_info['filiali']; ?></b></a></td>
                                 <td class="titull"></td>
                             </tr>
-                        <?php $row_filiali_info = mysql_fetch_assoc($filiali_info);
+                        <?php $row_filiali_info = mysqli_fetch_assoc($filiali_info);
                         }
                         mysqli_free_result($filiali_info);
                         ?>

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 session_start();
 date_default_timezone_set('Europe/Tirane');
@@ -6,123 +7,48 @@ date_default_timezone_set('Europe/Tirane');
 require_once('ConMySQL.php');
 
 if (isset($_SESSION['uid'])) {
-  $user_info = $_SESSION['Username'] ?? addslashes($_SESSION['Username']);
+  $user_info = $_SESSION['Username'] ?? '';
 
-  $v_reptype = "";
-  if ((isset($_POST['reptype'])) && ($_POST['reptype'] != "")) {
-    $v_reptype = $_POST['reptype'];
+  $v_reptype = $_POST['reptype'] ?? '';
+
+  $v_begindate = '';
+  $v_perioddate = '';
+  $v_perioddate2 = '';
+  $v_view_dt = '';
+  
+  if (!empty($_POST['p_date1'])) {
+    $date1 = DateTime::createFromFormat('d.m.Y', $_POST['p_date1']);
+    if ($date1) {
+      $v_perioddate = " and ek.date_trans = '" . $date1->format('Y-m-d') . "'";
+      $v_perioddate2 = " and hyrjedalje.date_trans = '" . $date1->format('Y-m-d') . "'";
+      
+      // Month name mapping using array instead of multiple if statements
+      $monthNames = [
+        '01' => 'Jan', '02' => 'Shk', '03' => 'Mar', '04' => 'Pri',
+        '05' => 'Maj', '06' => 'Qer', '07' => 'Kor', '08' => 'Gus',
+        '09' => 'Sht', '10' => 'Tet', '11' => 'Nen', '12' => 'Dhj'
+      ];
+      
+      $v_monthdisp = $monthNames[$date1->format('m')] ?? '';
+      $v_view_dt = $date1->format('d') . " " . $v_monthdisp . " " . $date1->format('Y');
+    }
   }
 
-  $v_begindate = "";
-  if ((isset($_POST['p_date1'])) && ($_POST['p_date1'] != "")) {
-
-    $v_perioddate  = " and ek.date_trans = '" . substr($_POST['p_date1'], 6, 4) . "-" . substr($_POST['p_date1'], 3, 2) . "-" . substr($_POST['p_date1'], 0, 2) . "'";
-
-    $v_perioddate2 = " and hyrjedalje.date_trans = '" . substr($_POST['p_date1'], 6, 4) . "-" . substr($_POST['p_date1'], 3, 2) . "-" . substr($_POST['p_date1'], 0, 2) . "'";
-
-    $v_tempdate   = substr($_POST['p_date1'], 6, 4) . "-" . substr($_POST['p_date1'], 3, 2) . "-" . substr($_POST['p_date1'], 0, 2);
-    $v_view_dt    = substr($v_tempdate, 8, 2);
-    $v_beginmonth = substr($v_tempdate, 5, 2);
-    $v_monthdisp = "";
-    if ($v_beginmonth == "01") {
-      $v_monthdisp = "Jan";
+  if (!empty($_POST['p_date2'])) {
+    $date2 = DateTime::createFromFormat('d.m.Y', $_POST['p_date2']);
+    if ($date2) {
+      $v_perioddate = " and ek.date_trans >= '" . $date1->format('Y-m-d') . "'
+                      and ek.date_trans <= '" . $date2->format('Y-m-d') . "' ";
+      
+      $v_perioddate2 = " and hyrjedalje.date_trans >= '" . $date1->format('Y-m-d') . "'
+                       and hyrjedalje.date_trans <= '" . $date2->format('Y-m-d') . "' ";
+      
+      $v_monthdisp = $monthNames[$date2->format('m')] ?? '';
+      $v_view_dt .= " - " . $date2->format('d') . " " . $v_monthdisp . " " . $date2->format('Y');
     }
-    if ($v_beginmonth == "02") {
-      $v_monthdisp = "Shk";
-    }
-    if ($v_beginmonth == "03") {
-      $v_monthdisp = "Mar";
-    }
-    if ($v_beginmonth == "04") {
-      $v_monthdisp = "Pri";
-    }
-    if ($v_beginmonth == "05") {
-      $v_monthdisp = "Maj";
-    }
-    if ($v_beginmonth == "06") {
-      $v_monthdisp = "Qer";
-    }
-    if ($v_beginmonth == "07") {
-      $v_monthdisp = "Kor";
-    }
-    if ($v_beginmonth == "08") {
-      $v_monthdisp = "Gus";
-    }
-    if ($v_beginmonth == "09") {
-      $v_monthdisp = "Sht";
-    }
-    if ($v_beginmonth == "10") {
-      $v_monthdisp = "Tet";
-    }
-    if ($v_beginmonth == "11") {
-      $v_monthdisp = "Nen";
-    }
-    if ($v_beginmonth == "12") {
-      $v_monthdisp = "Dhj";
-    }
-
-    $v_view_dt    .= " " . $v_monthdisp . " " . substr($v_tempdate, 0, 4);
   }
 
-  $v_enddate = "";
-  if ((isset($_POST['p_date2'])) && ($_POST['p_date2'] != "")) {
-
-    $v_perioddate  = " and ek.date_trans >= '" . substr($_POST['p_date1'], 6, 4) . "-" . substr($_POST['p_date1'], 3, 2) . "-" . substr($_POST['p_date1'], 0, 2) . "'
-                           and ek.date_trans <= '" . substr($_POST['p_date2'], 6, 4) . "-" . substr($_POST['p_date2'], 3, 2) . "-" . substr($_POST['p_date2'], 0, 2) . "' ";
-
-    $v_perioddate2 = " and hyrjedalje.date_trans >= '" . substr($_POST['p_date1'], 6, 4) . "-" . substr($_POST['p_date1'], 3, 2) . "-" . substr($_POST['p_date1'], 0, 2) . "'
-                           and hyrjedalje.date_trans <= '" . substr($_POST['p_date2'], 6, 4) . "-" . substr($_POST['p_date2'], 3, 2) . "-" . substr($_POST['p_date2'], 0, 2) . "' ";
-
-    $v_tempdate   = substr($_POST['p_date2'], 6, 4) . "-" . substr($_POST['p_date2'], 3, 2) . "-" . substr($_POST['p_date2'], 0, 2);
-    $v_view_dt   .= " - " . substr($v_tempdate, 8, 2);
-    $v_beginmonth = substr($v_tempdate, 5, 2);
-    $v_monthdisp = "";
-    if ($v_beginmonth == "01") {
-      $v_monthdisp = "Jan";
-    }
-    if ($v_beginmonth == "02") {
-      $v_monthdisp = "Shk";
-    }
-    if ($v_beginmonth == "03") {
-      $v_monthdisp = "Mar";
-    }
-    if ($v_beginmonth == "04") {
-      $v_monthdisp = "Pri";
-    }
-    if ($v_beginmonth == "05") {
-      $v_monthdisp = "Maj";
-    }
-    if ($v_beginmonth == "06") {
-      $v_monthdisp = "Qer";
-    }
-    if ($v_beginmonth == "07") {
-      $v_monthdisp = "Kor";
-    }
-    if ($v_beginmonth == "08") {
-      $v_monthdisp = "Gus";
-    }
-    if ($v_beginmonth == "09") {
-      $v_monthdisp = "Sht";
-    }
-    if ($v_beginmonth == "10") {
-      $v_monthdisp = "Tet";
-    }
-    if ($v_beginmonth == "11") {
-      $v_monthdisp = "Nen";
-    }
-    if ($v_beginmonth == "12") {
-      $v_monthdisp = "Dhj";
-    }
-
-    $v_view_dt    .= " " . $v_monthdisp . " " . substr($v_tempdate, 0, 4);
-  }
-
-  $v_klient_id = 0;
-  if ((isset($_POST['id_klienti'])) && ($_POST['id_klienti'] != "")) {
-    var_dump("gdfkgdgdfb");
-    exit();
-    $v_klient_id = $_POST['id_klienti'];
-  }
+  $v_klient_id = (int)($_POST['id_klienti'] ?? 0);
 
 ?>
 
@@ -142,7 +68,7 @@ if (isset($_SESSION['uid'])) {
 
   <head>
 
-    <title><?php echo $_SESSION['CNAME']; ?> - Web Exchange System - Raport per transaksionet ditore/periodike</title>
+    <title><?= htmlspecialchars($_SESSION['CNAME'] ?? '') ?> - Web Exchange System - Raport per transaksionet ditore/periodike</title>
 
     <link href="rep.css" rel="stylesheet" type="text/css">
 
@@ -204,17 +130,20 @@ if (isset($_SESSION['uid'])) {
             <table class="OraTable">
               <caption><span class="ReportTitle"> Raport per klient </span></caption>
               <?php
-              //mysql_select_db($database_MySQL, $MySQL);
-              $query_filiali_info = "select * from klienti where id = " . $v_klient_id;
-              $filiali_info = mysqli_query($MySQL, $query_filiali_info) or die(mysql_error());
-              $row_filiali_info = $filiali_info->fetch_assoc();
-              while ($row_filiali_info) {
-              ?>
-                <caption><span class="ReportSubTitle"> <?php echo strtoupper($row_filiali_info['emri']) . " " . strtoupper($row_filiali_info['mbiemri']); ?> </span></caption>
-              <?php
-                $row_filiali_info = $filiali_info->fetch_assoc();;
+              if ($v_klient_id > 0) {
+                $query_filiali_info = "SELECT * FROM klienti WHERE id = ?";
+                $stmt = mysqli_prepare($MySQL, $query_filiali_info);
+                mysqli_stmt_bind_param($stmt, 'i', $v_klient_id);
+                mysqli_stmt_execute($stmt);
+                $result = mysqli_stmt_get_result($stmt);
+                
+                while ($row_filiali_info = mysqli_fetch_assoc($result)) {
+                  ?>
+                  <caption><span class="ReportSubTitle"> <?= htmlspecialchars(strtoupper($row_filiali_info['emri'] . " " . $row_filiali_info['mbiemri'])) ?> </span></caption>
+                  <?php
+                }
+                mysqli_stmt_close($stmt);
               }
-              mysqli_free_result($filiali_info);
               ?>
               <caption><span class="ReportSubTitle"> <?php echo $v_view_dt; ?> </span></caption>
               <thead>
@@ -254,7 +183,6 @@ if (isset($_SESSION['uid'])) {
 
                   set_time_limit(0);
 
-                  //mysql_select_db($database_MySQL, $MySQL);
                   $RepInfo_sql = " select ek.*, ed.*, k.emri, k.mbiemri, m1.monedha as mon1, m2.monedha as mon2
                        from exchange_koke as ek,
                             exchange_detaje as ed,
@@ -270,7 +198,7 @@ if (isset($_SESSION['uid'])) {
                         and ed.id_mondebituar = m2.id
                    ";
 
-                  $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysql_error());
+                  $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysqli_error($MySQL));
                   $row_RepInfo = $RepInfoRS->fetch_assoc();
 
                   $rowno   = 0;
@@ -340,7 +268,6 @@ if (isset($_SESSION['uid'])) {
                 </tr>
                 <?php
 
-                //mysql_select_db($database_MySQL, $MySQL);
                 $query_gjendje_info = " SELECT hyrjedalje.id_klienti, klienti.emri, klienti.mbiemri, hyrjedalje.id_monedhe, monedha.monedha,
                                          SUM( case when hyrjedalje.drcr = 'Debitim'  then hyrjedalje.vleftapaguar else 0 end) vleftadebit,
                                          SUM( case when hyrjedalje.drcr = 'Kreditim' then hyrjedalje.vleftapaguar else 0 end) vleftakredit
@@ -352,7 +279,7 @@ if (isset($_SESSION['uid'])) {
                                      " . $v_perioddate2 . "
                                 GROUP BY hyrjedalje.id_klienti, klienti.emri, klienti.mbiemri, hyrjedalje.id_monedhe, monedha.monedha
                                 ORDER BY klienti.emri, klienti.mbiemri, hyrjedalje.id_monedhe ";
-                $gjendje_info     = mysqli_query($MySQL, $query_gjendje_info) or die(mysql_error());
+                $gjendje_info     = mysqli_query($MySQL, $query_gjendje_info) or die(mysqli_error($MySQL));
                 $row_gjendje_info = $gjendje_info->fetch_assoc();;
                 $rowno2 = 0;
 
@@ -480,7 +407,7 @@ if (isset($_SESSION['uid'])) {
                      order by info.id ";
               }
 
-              $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysql_error());
+              $RepInfoRS   = mysqli_query($MySQL, $RepInfo_sql) or die(mysqli_error($MySQL));
               $row_RepInfo = $RepInfoRS->fetch_assoc();
 
               while ($row_RepInfo) {
@@ -555,54 +482,21 @@ if (isset($_SESSION['uid'])) {
 
 <script>
   // Disable right-click context menu
-  document.addEventListener('contextmenu', event => event.preventDefault());
+  document.addEventListener('contextmenu', e => e.preventDefault());
 </script>
 
 <script>
   // Disable keyCode
   document.addEventListener('keydown', e => {
-    if
-    // Disable F1
-    (e.keyCode === 112 ||
-
-      // Disable F3
-      e.keyCode === 114 ||
-
-      // Disable F5
-      e.keyCode === 116 ||
-
-      // Disable F6
-      e.keyCode === 117 ||
-
-      // Disable F7
-      e.keyCode === 118 ||
-
-      // Disable F10
-      e.keyCode === 121 ||
-
-      // Disable F11
-      e.keyCode === 122 ||
-
-      // Disable F12
-      e.keyCode === 123 ||
-
-      // Disable Ctrl
-      e.ctrlKey ||
-
-      // Disable Shift
-      e.shiftKey ||
-
-      // Disable Alt
-      e.altKey ||
-
-      // Disable Ctrl+Shift+Key
-      e.ctrlKey && e.shiftKey ||
-
-      // Disable Ctrl+Shift+alt
-      e.ctrlKey && e.shiftKey && e.altKey
-    ) {
+    const blockedKeys = [112, 114, 116, 117, 118, 121, 122, 123];
+    
+    if (blockedKeys.includes(e.keyCode) || 
+        e.ctrlKey || 
+        e.shiftKey || 
+        e.altKey || 
+        (e.ctrlKey && e.shiftKey) || 
+        (e.ctrlKey && e.shiftKey && e.altKey)) {
       e.preventDefault();
-      //alert('Not Allowed');
     }
   });
 </script>

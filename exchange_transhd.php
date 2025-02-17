@@ -51,8 +51,8 @@ if (isset($_SESSION['uid'])) {
   }
 
   if (isset($_GET['action']) && ($_GET['action'] == "del")) {
-    $sql_info = "UPDATE hyrjedalje SET chstatus ='F' WHERE id = '" . $_GET[tid] . "'";
-    $result = $MySQL->query($sql_info) or die(mysql_error());
+    $sql_info = "UPDATE hyrjedalje SET chstatus ='F' WHERE id = '" . $_GET['tid'] . "'";
+    $result = $MySQL->query($sql_info) or die(mysqli_error($MySQL));
   }
 ?>
 
@@ -278,7 +278,7 @@ if (isset($_SESSION['uid'])) {
                      order by h.unique_id desc
                    ";
 
-                            $RepInfoRS   = $MySQL->query($RepInfo_sql) or die(mysql_error());
+                            $RepInfoRS   = $MySQL->query($RepInfo_sql) or die(mysqli_error($MySQL));
                             $row_RepInfo = $RepInfoRS->fetch_assoc();
 
                             while ($row_RepInfo) {

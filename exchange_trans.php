@@ -47,8 +47,8 @@ if (isset($_SESSION['uid'])) {
     }
 
     if (isset($_GET['action']) && ($_GET['action'] == "del")) {
-        $sql_info = "UPDATE exchange_koke SET chstatus ='F' WHERE id = '" . $_GET[tid] . "'";
-        $result = mysql_query($sql_info, $MySQL) or die(mysql_error());
+        $sql_info = "UPDATE exchange_koke SET chstatus ='F' WHERE id = '" . $_GET['tid'] . "'";
+        $result = $MySQL->query($sql_info) or die(mysqli_error($MySQL));
     }
 ?>
 
@@ -323,7 +323,7 @@ if (isset($_SESSION['uid'])) {
                                                                     <?php  }  ?>
                                                                 </td>
                                                             </tr>
-                                                        <?php $row_RepInfo = mysql_fetch_assoc($RepInfoRS);
+                                                        <?php $row_RepInfo = $RepInfoRS->fetch_assoc();
                                                         };
                                                         mysqli_free_result($RepInfoRS);
                                                         ?>
